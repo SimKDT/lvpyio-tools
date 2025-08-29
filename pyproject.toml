@@ -1,0 +1,8 @@
+[project]
+name = "lvpyioTools"
+version = "1.0.1"
+dependencies = [
+    "numpy",
+    "tqdm",
+    "lvpyio"
+]
