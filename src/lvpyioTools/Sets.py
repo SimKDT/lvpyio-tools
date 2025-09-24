@@ -182,6 +182,19 @@ class LVSet():
         """
         return frame.images[image_number]
     
+    def get_mask(self, frame:ImageFrame, mask_number:int=0) -> np.ndarray:
+        """
+        Get the mask data from a specific frame and mask number.
+
+        Args:
+            frame (ImageFrame): The frame from which to extract the mask data.
+            mask_number (int, optional): The index of the mask within the frame. Defaults to 0.
+
+        Returns:
+            np.ndarray: The mask data as a NumPy mask array.
+        """
+        return frame.masks[mask_number]
+
     @DeprecationWarning
     def get_image_cached_folder(self, frame:ImageFrame, image_number:int=0, raw_name="raw_{0}_{1}_{2}.png") -> np.ndarray:
         """
