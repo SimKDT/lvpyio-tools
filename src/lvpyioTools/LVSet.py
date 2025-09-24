@@ -3,8 +3,6 @@ Created on Jul 02, 2025
 
 @author: S. CADET
 
-
-
 Tools to read and manipulate LaVision sets (.set) files.
 """
 
@@ -16,8 +14,10 @@ import numpy as np
 from tqdm import tqdm
 from typing import Union
 import xml.etree.ElementTree as ET
-import matplotlib.pyplot as plt
+# import matplotlib.pyplot as plt
 # import imageio.v2 as imageio
+
+from warnings import warn
 
 
 def get_calibration(calibration_file:str) -> dict:
@@ -118,22 +118,6 @@ class LVSet():
 
         self.time = time
         return time
-
-    @staticmethod
-    def get_frame_time(frame:ImageFrame) -> float:
-        """
-        Get the time information in the frame.
-
-        Args:
-            frame (lv.Frame): The frame from which to extract time information.
-
-        Returns:
-            float: The acquisition time of the frame in microseconds.
-        """
-        att = frame.attributes
-        ATS = float(att['AcqTimeSeries'].split(' ')[0])
-        AT = att['Acq.Time'][0][0]
-        return ATS + AT
 
     def get_buffer_frame(self, buffer_number: int, frame_number: int|None = 0) -> Union[ImageFrame, Buffer]:
         """
@@ -375,6 +359,23 @@ class LVSet():
         return i, j
 
 
+
+    @staticmethod
+    def get_frame_time(frame:ImageFrame) -> float:
+        """
+        Get the time information in the frame.
+
+        Args:
+            frame (lv.Frame): The frame from which to extract time information.
+
+        Returns:
+            float: The acquisition time of the frame in microseconds.
+        """
+        warn("LVSet.get_frame_time is deprecated, use LVFrame.get_frame_time instead.", DeprecationWarning, stacklevel=2)
+        att = frame.attributes
+        ATS = float(att['AcqTimeSeries'].split(' ')[0])
+        AT = att['Acq.Time'][0][0]
+        return ATS + AT
 
 
 
