@@ -16,7 +16,7 @@ import numpy as np
 from tqdm import tqdm
 from typing import Union
 import xml.etree.ElementTree as ET
-import matplotlib.pyplot as plt
+# import matplotlib.pyplot as plt
 # import imageio.v2 as imageio
 
 
