@@ -13,51 +13,51 @@ import os
 import numpy as np
 from tqdm import tqdm
 from typing import Union
-import xml.etree.ElementTree as ET
 # import matplotlib.pyplot as plt
 # import imageio.v2 as imageio
 
 from warnings import warn
 
+# @DeprecationWarning
+# def get_calibration(calibration_file:str) -> dict:
+#     """
+#     Get the calibration settings from the given calibration file which should be a XML file. Values are rounded to fit the calibration application of DaVis.
 
-def get_calibration(calibration_file:str) -> dict:
-    """
-    Get the calibration settings from the given calibration file which should be a XML file. Values are rounded to fit the calibration application of DaVis.
+#     Args:
+#         calibration_file (str): Path to the calibration file in XML format.
 
-    Args:
-        calibration_file (str): Path to the calibration file in XML format.
+#     Returns:
+#         dict: A dictionary containing the calibration scales for X and Y axes, 
+#               including slope, offset, and the unit of measurement. The structure is as follows:
+#               {
+#                   "x": {
+#                       "slope": float,  # Conversion factor for X-axis (mm per pixel)
+#                       "offset": float  # Offset for X-axis (mm)
+#                   },
+#                   "y": {
+#                       "slope": float,  # Conversion factor for Y-axis (mm per pixel)
+#                       "offset": float  # Offset for Y-axis (mm)
+#                   },
+#                   "unit": str  # Unit of measurement (e.g., "mm")
+#               }
+#     """
+#     import xml.etree.ElementTree as ET
+#     # Read and parse the XML file
+#     tree = ET.parse(calibration_file)
+#     root = tree.getroot()
+#     # Search for "Scales" in the XML file
+#     scales = root.find(".//Scales")
 
-    Returns:
-        dict: A dictionary containing the calibration scales for X and Y axes, 
-              including slope, offset, and the unit of measurement. The structure is as follows:
-              {
-                  "x": {
-                      "slope": float,  # Conversion factor for X-axis (mm per pixel)
-                      "offset": float  # Offset for X-axis (mm)
-                  },
-                  "y": {
-                      "slope": float,  # Conversion factor for Y-axis (mm per pixel)
-                      "offset": float  # Offset for Y-axis (mm)
-                  },
-                  "unit": str  # Unit of measurement (e.g., "mm")
-              }
-    """
-    # Read and parse the XML file
-    tree = ET.parse(calibration_file)
-    root = tree.getroot()
-    # Search for "Scales" in the XML file
-    scales = root.find(".//Scales")
+#     linearScaleX = scales.find("LinearScaleX")
+#     linearScaleY = scales.find("LinearScaleY")
 
-    linearScaleX = scales.find("LinearScaleX")
-    linearScaleY = scales.find("LinearScaleY")
-
-    factorX = float(linearScaleX.get("FactorMmPerPixel"))
-    factorY = float(linearScaleY.get("FactorMmPerPixel"))
-    offsetX = float(linearScaleX.get("OffsetMm"))
-    offsetY = float(linearScaleY.get("OffsetMm"))
-    return {"x": {"slope": round(factorX, 6), "offset": round(offsetX, 3)},
-            "y": {"slope": round(factorY, 6), "offset": round(offsetY, 3)},
-            "unit": "mm"}
+#     factorX = float(linearScaleX.get("FactorMmPerPixel"))
+#     factorY = float(linearScaleY.get("FactorMmPerPixel"))
+#     offsetX = float(linearScaleX.get("OffsetMm"))
+#     offsetY = float(linearScaleY.get("OffsetMm"))
+#     return {"x": {"slope": round(factorX, 6), "offset": round(offsetX, 3)},
+#             "y": {"slope": round(factorY, 6), "offset": round(offsetY, 3)},
+#             "unit": "mm"}
 
 class LVSet():
     def __init__(self, file):
@@ -153,31 +153,148 @@ class LVSet():
         frame.buffer_number = buffer_number
         return frame
 
-    def get_image(self, frame:ImageFrame, image_number:int=0) -> np.ndarray:
+
+
+    ### DEPRECATED METHODS ###
+
+    @staticmethod
+    @DeprecationWarning
+    def get_XY_axis(frame:ImageFrame, calibration:dict|None=None) -> tuple[np.ndarray, np.ndarray]:
+        """
+        Get the X and Y axis values of the frame. If calibration is provided, apply it to the axis values.
+
+        Args:
+            frame (ImageFrame): _description_
+            calibration (dict | None, optional): _description_. Defaults to None.
+
+        Returns:
+            tuple[np.ndarray, np.ndarray]: _description_
+        """
+        warn("LVSet.get_XY_axis is deprecated, use LVCalibration.get_XY_axis instead.", DeprecationWarning, stacklevel=2)
+        # Get the shape of the frame
+        height, width = LVSet.get_frame_shape(frame)
+        x_axis = np.arange(width)
+        y_axis = np.arange(height)
+
+        # Apply calibration if present
+        if calibration is not None:
+            x_axis, y_axis = LVSet.ij_2_XY(x_axis, y_axis, calibration)
+
+            # # Get calibration settings for x and y axes
+            # x_calibration = calibration['x']
+            # y_calibration = calibration['y']
+
+            # x_axis = x_axis * x_calibration['slope'] + x_calibration['offset']
+            # y_axis = y_axis * y_calibration['slope'] + y_calibration['offset']
+
+        return x_axis, y_axis
+    
+    @staticmethod
+    @DeprecationWarning
+    def ij_2_XY(i, j, calibration:dict) -> tuple[float, float]:
+        """
+        Get the physical coordinates (X, Y) of a point in the frame based on its pixel indices (i, j) and the calibration settings.
+
+        Args:
+            i (int): The pixel index along the X-axis (horizontal).
+            j (int): The pixel index along the Y-axis (vertical).
+            calibration (dict): The calibration settings containing slope and offset for X and Y axes.
+
+        Returns:
+            tuple[float, float]: The physical coordinates (X, Y) in the calibrated space.
+        """
+        warn("LVSet.ij_2_XY is deprecated, use LVCalibration.ij_2_XY instead.", DeprecationWarning, stacklevel=2)
+        x_calibration = calibration['x']
+        y_calibration = calibration['y']
+
+        x_point = i * x_calibration['slope'] + x_calibration['offset']
+        y_point = j * y_calibration['slope'] + y_calibration['offset']
+        return x_point, y_point
+    
+    @staticmethod
+    @DeprecationWarning
+    def XY_2_ij(x, y, calibration:dict) -> tuple[int, int]:
+        """
+        Get the pixel indices (i, j) of a point in the frame based on its physical coordinates (X, Y) and the calibration settings.
+
+        Args:
+            x (float): The physical X-coordinate in the calibrated space.
+            y (float): The physical Y-coordinate in the calibrated space.
+            calibration (dict): The calibration settings containing slope and offset for X and Y axes.
+
+        Returns:
+            tuple[int, int]: The pixel indices (i, j) corresponding to the physical coordinates.
+        """
+        warn("LVSet.XY_2_ij is deprecated, use LVCalibration.XY_2_ij instead.", DeprecationWarning, stacklevel=2)
+        x_calibration = calibration['x']
+        y_calibration = calibration['y']
+
+        i = int((x - x_calibration['offset']) / x_calibration['slope'])
+        j = int((y - y_calibration['offset']) / y_calibration['slope'])
+        return i, j
+
+    @staticmethod
+    @DeprecationWarning
+    def get_frame_time(self, frame:ImageFrame) -> float:
+        frame = self.frame
+        """
+        Get the time information in the frame.
+
+        Returns:
+            float: The acquisition time of the frame in microseconds.
+        """
+        warn("LVSet.get_frame_time is deprecated, use LVFrame.get_frame_time instead.", DeprecationWarning, stacklevel=2)
+        att = frame.attributes
+        ATS = float(att['AcqTimeSeries'].split(' ')[0])
+        AT = att['Acq.Time'][0][0]
+        return ATS + AT
+
+    @DeprecationWarning
+    def get_image(self, image_number:int=0) -> np.ndarray:
         """
         Get the image data from a specific frame and image number.
 
         Args:
-            frame (ImageFrame): The frame from which to extract the image data.
             image_number (int, optional): The index of the image within the frame. Defaults to 0.
 
         Returns:
             np.ndarray: The image data as a NumPy array.
         """
-        return frame.images[image_number]
-    
-    def get_mask(self, frame:ImageFrame, mask_number:int=0) -> np.ndarray:
+        warn("LVSet.get_image is deprecated, use LVFrame.get_image instead.", DeprecationWarning, stacklevel=2)
+        return self.frame.images[image_number]
+
+    @staticmethod
+    @DeprecationWarning
+    def get_frame_time(frame:ImageFrame) -> float:
         """
-        Get the mask data from a specific frame and mask number.
+        Get the time information in the frame.
 
         Args:
-            frame (ImageFrame): The frame from which to extract the mask data.
-            mask_number (int, optional): The index of the mask within the frame. Defaults to 0.
+            frame (lv.Frame): The frame from which to extract time information.
 
         Returns:
-            np.ndarray: The mask data as a NumPy mask array.
+            float: The acquisition time of the frame in microseconds.
         """
-        return frame.masks[mask_number]
+        warn("LVSet.get_frame_time is deprecated, use LVFrame.get_frame_time instead.", DeprecationWarning, stacklevel=2)
+        att = frame.attributes
+        ATS = float(att['AcqTimeSeries'].split(' ')[0])
+        AT = att['Acq.Time'][0][0]
+        return ATS + AT
+
+    @staticmethod
+    @DeprecationWarning
+    def get_frame_shape(frame:ImageFrame) -> tuple[int, int]:
+        """
+        Get the shape of the frame.
+
+        Args:
+            frame (ImageFrame): The frame from which to extract the shape.
+
+        Returns:
+            tuple[int, int]: A tuple representing the shape of the frame as (height, width).
+        """
+        warn("LVSet.get_frame_shape is deprecated, use LVFrame.get_frame_shape instead.", DeprecationWarning, stacklevel=2)
+        return frame.shape
 
     @DeprecationWarning
     def get_image_cached_folder(self, frame:ImageFrame, image_number:int=0, raw_name="raw_{0}_{1}_{2}.png") -> np.ndarray:
@@ -204,6 +321,7 @@ class LVSet():
             print(f"get_image took {end - start:.6f} seconds")
         ```
         """
+        warn("LVSet.get_image_cached_folder is deprecated, use LVSet.get_image instead.", DeprecationWarning, stacklevel=2)
         raw_path = os.path.join(self.folder, "raw")
         os.makedirs(raw_path, exist_ok=True)
 
@@ -253,6 +371,7 @@ class LVSet():
             print(f"get_image took {end - start:.6f} seconds")
         ```
         """
+        warn("LVSet.get_image_cached is deprecated, use LVSet.get_image instead.", DeprecationWarning, stacklevel=2)
         # id
         buffer_number = frame.buffer_number
         frame_number = frame.frame_number
@@ -262,21 +381,44 @@ class LVSet():
         img = frame.images[image_number]
         self._cached_frames[raw_name] = img
         return img
-    
-    @staticmethod
-    def get_frame_shape(frame:ImageFrame) -> tuple[int, int]:
+
+    @DeprecationWarning
+    def get_mask(self, frame:ImageFrame, mask_number:int=0) -> np.ndarray:
         """
-        Get the shape of the frame.
+        Get the mask data from a specific frame and mask number.
 
         Args:
-            frame (ImageFrame): The frame from which to extract the shape.
+            frame (ImageFrame): The frame from which to extract the mask data.
+            mask_number (int, optional): The index of the mask within the frame. Defaults to 0.
 
         Returns:
-            tuple[int, int]: A tuple representing the shape of the frame as (height, width).
+            np.ndarray: The mask data as a NumPy mask array.
         """
-        return frame.shape
+        warn("LVSet.get_mask is deprecated, use LVFrame.get_mask instead.", DeprecationWarning, stacklevel=2)
+        return frame.masks[mask_number]
+        
+    @DeprecationWarning
+    def get_image(self, frame:ImageFrame, image_number:int=0) -> np.ndarray:
+        """
+        Get the image data from a specific frame and image number.
 
+        Args:
+            frame (ImageFrame): The frame from which to extract the image data.
+            image_number (int, optional): The index of the image within the frame. Defaults to 0.
+
+        Returns:
+            np.ndarray: The image data as a NumPy array.
+        """
+        warn("LVSet.get_image is deprecated, use LVFrame.get_image instead.", DeprecationWarning, stacklevel=2)
+        try:
+            image = frame.images[image_number]
+        except IndexError:
+            raise IndexError(f"Image number {image_number} is out of range. Available images: 0 to {len(frame.images)-1}.")
+        return image
+    
+    @DeprecationWarning
     def get_XY_calibration(self, frame:ImageFrame) -> dict:
+        warn("LVSet.get_XY_calibration is deprecated, use LVFrame.get_XY_calibration instead.", DeprecationWarning, stacklevel=2)
         return {
             "x": {
                 "slope": frame.scales.x.slope,
@@ -287,98 +429,6 @@ class LVSet():
                 "offset": frame.scales.y.offset
             },
         }
-    
-    @staticmethod
-    def get_XY_axis(frame:ImageFrame, calibration:dict|None=None) -> tuple[np.ndarray, np.ndarray]:
-        """
-        Get the X and Y axis values of the frame. If calibration is provided, apply it to the axis values.
-
-        Args:
-            frame (ImageFrame): _description_
-            calibration (dict | None, optional): _description_. Defaults to None.
-
-        Returns:
-            tuple[np.ndarray, np.ndarray]: _description_
-        """
-        # Get the shape of the frame
-        height, width = LVSet.get_frame_shape(frame)
-        x_axis = np.arange(width)
-        y_axis = np.arange(height)
-
-        # Apply calibration if present
-        if calibration is not None:
-            x_axis, y_axis = LVSet.ij_2_XY(x_axis, y_axis, calibration)
-
-            # # Get calibration settings for x and y axes
-            # x_calibration = calibration['x']
-            # y_calibration = calibration['y']
-
-            # x_axis = x_axis * x_calibration['slope'] + x_calibration['offset']
-            # y_axis = y_axis * y_calibration['slope'] + y_calibration['offset']
-
-        return x_axis, y_axis
-    
-    @staticmethod
-    def ij_2_XY(i, j, calibration:dict) -> tuple[float, float]:
-        """
-        Get the physical coordinates (X, Y) of a point in the frame based on its pixel indices (i, j) and the calibration settings.
-
-        Args:
-            i (int): The pixel index along the X-axis (horizontal).
-            j (int): The pixel index along the Y-axis (vertical).
-            calibration (dict): The calibration settings containing slope and offset for X and Y axes.
-
-        Returns:
-            tuple[float, float]: The physical coordinates (X, Y) in the calibrated space.
-        """
-        x_calibration = calibration['x']
-        y_calibration = calibration['y']
-
-        x_point = i * x_calibration['slope'] + x_calibration['offset']
-        y_point = j * y_calibration['slope'] + y_calibration['offset']
-        return x_point, y_point
-    
-    @staticmethod
-    def XY_2_ij(x, y, calibration:dict) -> tuple[int, int]:
-        """
-        Get the pixel indices (i, j) of a point in the frame based on its physical coordinates (X, Y) and the calibration settings.
-
-        Args:
-            x (float): The physical X-coordinate in the calibrated space.
-            y (float): The physical Y-coordinate in the calibrated space.
-            calibration (dict): The calibration settings containing slope and offset for X and Y axes.
-
-        Returns:
-            tuple[int, int]: The pixel indices (i, j) corresponding to the physical coordinates.
-        """
-        x_calibration = calibration['x']
-        y_calibration = calibration['y']
-
-        i = int((x - x_calibration['offset']) / x_calibration['slope'])
-        j = int((y - y_calibration['offset']) / y_calibration['slope'])
-        return i, j
-
-
-
-    @staticmethod
-    def get_frame_time(frame:ImageFrame) -> float:
-        """
-        Get the time information in the frame.
-
-        Args:
-            frame (lv.Frame): The frame from which to extract time information.
-
-        Returns:
-            float: The acquisition time of the frame in microseconds.
-        """
-        warn("LVSet.get_frame_time is deprecated, use LVFrame.get_frame_time instead.", DeprecationWarning, stacklevel=2)
-        att = frame.attributes
-        ATS = float(att['AcqTimeSeries'].split(' ')[0])
-        AT = att['Acq.Time'][0][0]
-        return ATS + AT
-
-
-
 
 if __name__ == "__main__":
     import time
