@@ -12,52 +12,13 @@ from lvpyio.types.buffer import Buffer
 import os
 import numpy as np
 from tqdm import tqdm
-from typing import Union
+# from typing import Union
 # import matplotlib.pyplot as plt
 # import imageio.v2 as imageio
 
 from warnings import warn
 
-# @DeprecationWarning
-# def get_calibration(calibration_file:str) -> dict:
-#     """
-#     Get the calibration settings from the given calibration file which should be a XML file. Values are rounded to fit the calibration application of DaVis.
-
-#     Args:
-#         calibration_file (str): Path to the calibration file in XML format.
-
-#     Returns:
-#         dict: A dictionary containing the calibration scales for X and Y axes, 
-#               including slope, offset, and the unit of measurement. The structure is as follows:
-#               {
-#                   "x": {
-#                       "slope": float,  # Conversion factor for X-axis (mm per pixel)
-#                       "offset": float  # Offset for X-axis (mm)
-#                   },
-#                   "y": {
-#                       "slope": float,  # Conversion factor for Y-axis (mm per pixel)
-#                       "offset": float  # Offset for Y-axis (mm)
-#                   },
-#                   "unit": str  # Unit of measurement (e.g., "mm")
-#               }
-#     """
-#     import xml.etree.ElementTree as ET
-#     # Read and parse the XML file
-#     tree = ET.parse(calibration_file)
-#     root = tree.getroot()
-#     # Search for "Scales" in the XML file
-#     scales = root.find(".//Scales")
-
-#     linearScaleX = scales.find("LinearScaleX")
-#     linearScaleY = scales.find("LinearScaleY")
-
-#     factorX = float(linearScaleX.get("FactorMmPerPixel"))
-#     factorY = float(linearScaleY.get("FactorMmPerPixel"))
-#     offsetX = float(linearScaleX.get("OffsetMm"))
-#     offsetY = float(linearScaleY.get("OffsetMm"))
-#     return {"x": {"slope": round(factorX, 6), "offset": round(offsetX, 3)},
-#             "y": {"slope": round(factorY, 6), "offset": round(offsetY, 3)},
-#             "unit": "mm"}
+from lvpyioTools.LVFrame import LVFrame
 
 class LVSet():
     def __init__(self, file):
@@ -119,38 +80,23 @@ class LVSet():
         self.time = time
         return time
 
-    def get_buffer_frame(self, buffer_number: int, frame_number: int|None = 0) -> Union[ImageFrame, Buffer]:
+    def get_buffer_frame(self, buffer_number: int, frame_number:int = 0) -> LVFrame:
         """
-        Retrieve a specific frame from a buffer in the set. Alternatively, if `frame_number` is None, return the entire buffer.
+        Get a specific frame from a specific buffer and wrap it in an LVFrame object.
 
         Args:
-            buffer_number (int): The index of the buffer to retrieve.
-            frame_number (int, optional): The index of the frame within the buffer. Defaults to 0. If None, the entire buffer is returned.
+            buffer_number (int): The buffer index.
+            frame_number (int, optional): The frame index within the buffer. Defaults to 0.
 
         Returns:
-            lvpyio.Frame or list[lvpyio.Frame]: A single frame if `frame_number` is specified, or the entire buffer (list of frames) if `frame_number` is None.
-
-        Examples:
-            ```
-            path = "..."
-            sets = LVSet(path)
-
-            # Get the first frame of the first buffer
-            frame = sets.get_buffer_frame(0)
-
-            # Get the entire first buffer
-            buffer = sets.get_buffer_frame(0, None)
-
-            # Get the second frame of the first buffer
-            frame = sets.get_buffer_frame(0, 1)
-            ```
+            LVFrame: The wrapped frame object.
         """
-        if frame_number is None:
-            frame = self.set[buffer_number]
-        else:
-            frame = self.set[buffer_number][frame_number]
+        frame = self.set[buffer_number][frame_number]
+        frame = LVFrame(frame)
+
         frame.frame_number = frame_number
         frame.buffer_number = buffer_number
+        
         return frame
 
 
@@ -429,39 +375,3 @@ class LVSet():
                 "offset": frame.scales.y.offset
             },
         }
-
-if __name__ == "__main__":
-    import time
-
-    file = "/media/scadet03/T5 EVO/data.piv-wavemaker/DaVis/Upstream/flexible/f=0.9, S0=0.05, d=0.06, N=1.0, eps+=55.0, eps-=0.0/1/1.set"
-
-    sets = LVSet(file)
-    print(sets.folder)
-    print(sets.file)
-    # Measure time for get_image_cached
-    start = time.time()
-    for i in range(0,20):
-        frame = sets.get_buffer_frame(i)
-        image_cached = sets.get_image_cached(frame)
-    for i in range(0,20):
-        frame = sets.get_buffer_frame(i)
-        image_cached = sets.get_image_cached(frame)
-    end = time.time()
-    print(f"get_image_cached took {end - start:.6f} seconds")
-
-    # Measure time for get_image
-    start = time.time()
-    for i in range(0,20):
-        frame = sets.get_buffer_frame(i)
-        image_cached = sets.get_image(frame)
-    for i in range(0,20):
-        frame = sets.get_buffer_frame(i)
-        image_cached = sets.get_image(frame)
-    end = time.time()
-    print(f"get_image took {end - start:.6f} seconds")
-
-
-    print()
-
-
-

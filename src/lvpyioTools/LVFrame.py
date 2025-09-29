@@ -4,6 +4,7 @@ Created on Sep, 2025
 @author: S. CADET
 """
 import numpy as np
+from lvpyio.types.frame import ImageFrame
 
 import LVCalibration
 
@@ -11,7 +12,7 @@ import LVCalibration
 
 
 class LVFrame:
-    def __init__(self,frame):
+    def __init__(self,frame:ImageFrame):
         self.frame = frame
 
     def get_frame_time(self):
