@@ -70,6 +70,8 @@ class LVCalibration:
             calibration = {
                 "x": {"slope": 1.0, "offset": 0.0},
                 "y": {"slope": 1.0, "offset": 0.0},
+                "z": {"slope": 1.0, "offset": 0.0},
+                "grid": {"x": 1, "y": 1, "z": 1},
                 "unit": "pixel", "automatic": True
             }
         else:
@@ -133,7 +135,8 @@ class LVCalibration:
             raise ValueError("Calibration settings are not provided.")
         x_calibration = calibration['x']
         y_calibration = calibration['y']
+        grid_calibration = calibration["grid"]
 
-        x_point = i * x_calibration['slope'] + x_calibration['offset']
-        y_point = j * y_calibration['slope'] + y_calibration['offset']
+        x_point = i * x_calibration['slope'] * grid_calibration["x"] + x_calibration['offset']
+        y_point = j * y_calibration['slope'] * grid_calibration["y"] + y_calibration['offset']
         return x_point, y_point

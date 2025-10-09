@@ -6,7 +6,7 @@ Created on Sep, 2025
 import numpy as np
 from lvpyio.types.frame import ImageFrame
 
-import lvpyioTools.LVCalibration
+from lvpyioTools.LVCalibration import LVCalibration
 
 
 
@@ -83,17 +83,38 @@ class LVFrame:
         return mask
     
     def get_XY_calibration(self) -> dict:
+        if hasattr(self, 'calibration'):
+            return self.calibration
         frame = self.frame
         calibration = {
             "x": {
                 "slope": frame.scales.x.slope,
-                "offset": frame.scales.x.offset
+                "offset": frame.scales.x.offset,
+                "unit": frame.scales.x.unit,
+                "description": frame.scales.x.description,
             },
             "y": {
                 "slope": frame.scales.y.slope,
-                "offset": frame.scales.y.offset
+                "offset": frame.scales.y.offset,
+                "unit": frame.scales.y.unit,
+                "description": frame.scales.y.description,
             },
+            "z": {
+                "slope": frame.scales.z.slope,
+                "offset": frame.scales.z.offset,
+                "unit": frame.scales.z.unit,
+                "description": frame.scales.z.description,
+            }
         }
+        if "grid" in frame:
+            calibration["grid"] = frame.grid
+        else:
+            calibration["grid"] = {
+                "x": 1,
+                "y": 1,
+                "z": 1,
+            }
+        self.calibration = calibration
         return LVCalibration(calibration)
 
     def get_XY_axis(self) -> tuple[np.ndarray, np.ndarray]:
@@ -104,7 +125,7 @@ class LVFrame:
             tuple[np.ndarray, np.ndarray]: _description_
         """
         # Get the shape of the frame
-        height, width = self.frame.get_frame_shape()
+        height, width = self.get_frame_shape()
         x_axis = np.arange(width)
         y_axis = np.arange(height)
         calibration = self.get_XY_calibration()
