@@ -43,6 +43,19 @@ class LVFrame:
         except IndexError:
             raise IndexError(f"Image number {image_number} is out of range. Available images: 0 to {len(self.frame.images)-1}.")
         return image
+    
+    def set_image(self, image:np.ndarray, image_number:int=0) -> None:
+        """
+        Set the image data for a specific frame and image number.
+
+        Args:
+            image (np.ndarray): The image data to set as a NumPy array.
+            image_number (int, optional): The index of the image within the frame. Defaults to 0.
+        """
+        try:
+            self.frame.images[image_number] = image
+        except IndexError:
+            raise IndexError(f"Image number {image_number} is out of range. Available images: 0 to {len(self.frame.images)-1}.")
 
     def get_frame_shape(self) -> tuple[int, int]:
         """

@@ -99,6 +99,47 @@ class LVSet():
         
         return frame
 
+    def every_buffer(self, fct, _tqdm=False, *args, **kwargs):
+        """
+        Apply a function to every buffer in the set.
+
+        Args:
+            fct (callable): The function to apply. It should accept a Buffer object as its first argument.
+            *args: Additional positional arguments to pass to the function.
+            **kwargs: Additional keyword arguments to pass to the function.
+        """
+        for i, buffer in enumerate(tqdm(self.set, desc="Processing buffers", unit="buffer", disable=not _tqdm)):
+            fct(buffer, i, *args, **kwargs)
+
+    def every_buffer_save(self, fct, new_set_path, _tqdm=False, *args, **kwargs):
+        """
+        Apply a function to every buffer in the set and save.
+
+        Args:
+            fct (callable): The function to apply. It should accept a Buffer object as its first argument.
+            *args: Additional positional arguments to pass to the function.
+            **kwargs: Additional keyword arguments to pass to the function.
+        """
+        buffers = []
+        for buffer in tqdm(self.set, desc="Processing buffers", unit="buffer", disable=not _tqdm):
+            fct(buffer, *args, **kwargs)
+            buffers.append(buffer)
+
+        lv.write_set(buffers, new_set_path)
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
     ### DEPRECATED METHODS ###
