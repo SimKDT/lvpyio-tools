@@ -106,16 +106,20 @@ class LVFrame:
                 "description": frame.scales.z.description,
             }
         }
-        if "grid" in frame:
-            calibration["grid"] = frame.grid
+        if hasattr(frame, 'grid'):
+            calibration["grid"] = {
+                "x": frame.grid.x,
+                "y": frame.grid.y,
+                "z": frame.grid.z,
+            }
         else:
             calibration["grid"] = {
                 "x": 1,
                 "y": 1,
                 "z": 1,
             }
-        self.calibration = calibration
-        return LVCalibration(calibration)
+        self.calibration = LVCalibration(calibration)
+        return self.calibration
 
     def get_XY_axis(self) -> tuple[np.ndarray, np.ndarray]:
         """

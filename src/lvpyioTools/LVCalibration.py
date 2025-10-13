@@ -79,8 +79,8 @@ class LVCalibration:
         
         self.calibration = calibration
 
-    def __getattribute__(self, name):
-        return self.get(name)
+    # def __getattribute__(self, name):
+    #     return self.get(name)
 
         # if name in self.calibration:
         #     return self.calibration[name]
@@ -114,9 +114,10 @@ class LVCalibration:
             raise ValueError("Calibration settings are not provided.")
         x_calibration = calibration['x']
         y_calibration = calibration['y']
+        grid_calibration = calibration["grid"]
 
-        i = int((x - x_calibration['offset']) / x_calibration['slope'])
-        j = int((y - y_calibration['offset']) / y_calibration['slope'])
+        i = int((x - x_calibration['offset']) / (x_calibration['slope'] * grid_calibration["x"]))
+        j = int((y - y_calibration['offset']) / (y_calibration['slope'] * grid_calibration["y"]))
         return i, j
     
     def ij_2_XY(self, i, j) -> tuple[float, float]:
