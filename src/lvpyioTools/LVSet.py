@@ -416,3 +416,11 @@ class LVSet():
                 "offset": frame.scales.y.offset
             },
         }
+
+if __name__ == "__main__":
+    path = "/media/scadet03/CADET_MAIN/Manips/2025-10/data.2025-10.piv/DaVis/Upstream/jonc_2/f=0.7, S0=0.05, d=0.06, N=1.0/1/mask_shadow.set"
+    with LVSet(path) as sets:
+        frame = sets.get_buffer_frame(0)
+        image = frame.get_image(0)
+
+        print()
