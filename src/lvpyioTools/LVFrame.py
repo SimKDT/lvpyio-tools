@@ -82,7 +82,7 @@ class LVFrame:
             raise IndexError(f"Mask number {mask_number} is out of range. Available masks: 0 to {len(self.frame.masks)-1}.")
         return mask
     
-    def get_XY_calibration(self) -> dict:
+    def get_XY_calibration(self) -> LVCalibration:
         if hasattr(self, 'calibration'):
             return self.calibration
         frame = self.frame

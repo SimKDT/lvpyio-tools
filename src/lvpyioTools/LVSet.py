@@ -127,25 +127,40 @@ class LVSet():
 
         lv.write_set(buffers, new_set_path)
         
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    ### DEPRECATED METHODS ###
-
     @staticmethod
+    def get_frame_time(frame:ImageFrame) -> float:
+        """
+        Get the time information in the frame.
+
+        Args:
+            frame (lv.Frame): The frame from which to extract time information.
+
+        Returns:
+            float: The acquisition time of the frame in microseconds.
+        """
+        warn("LVSet.get_frame_time is deprecated, use LVFrame.get_frame_time instead.", DeprecationWarning, stacklevel=2)
+        att = frame.attributes
+        ATS = float(att['AcqTimeSeries'].split(' ')[0])
+        AT = att['Acq.Time'][0][0]
+        return ATS + AT
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+### DEPRECATED METHODS ###
+
     @DeprecationWarning
+    @staticmethod
     def get_XY_axis(frame:ImageFrame, calibration:dict|None=None) -> tuple[np.ndarray, np.ndarray]:
         """
         Get the X and Y axis values of the frame. If calibration is provided, apply it to the axis values.
@@ -176,8 +191,10 @@ class LVSet():
 
         return x_axis, y_axis
     
-    @staticmethod
+    
+    
     @DeprecationWarning
+    @staticmethod
     def ij_2_XY(i, j, calibration:dict) -> tuple[float, float]:
         """
         Get the physical coordinates (X, Y) of a point in the frame based on its pixel indices (i, j) and the calibration settings.
@@ -198,8 +215,8 @@ class LVSet():
         y_point = j * y_calibration['slope'] + y_calibration['offset']
         return x_point, y_point
     
-    @staticmethod
     @DeprecationWarning
+    @staticmethod
     def XY_2_ij(x, y, calibration:dict) -> tuple[int, int]:
         """
         Get the pixel indices (i, j) of a point in the frame based on its physical coordinates (X, Y) and the calibration settings.
@@ -220,56 +237,10 @@ class LVSet():
         j = int((y - y_calibration['offset']) / y_calibration['slope'])
         return i, j
 
+
+
+    @DeprecationWarning
     @staticmethod
-    @DeprecationWarning
-    def get_frame_time(self, frame:ImageFrame) -> float:
-        frame = self.frame
-        """
-        Get the time information in the frame.
-
-        Returns:
-            float: The acquisition time of the frame in microseconds.
-        """
-        warn("LVSet.get_frame_time is deprecated, use LVFrame.get_frame_time instead.", DeprecationWarning, stacklevel=2)
-        att = frame.attributes
-        ATS = float(att['AcqTimeSeries'].split(' ')[0])
-        AT = att['Acq.Time'][0][0]
-        return ATS + AT
-
-    @DeprecationWarning
-    def get_image(self, image_number:int=0) -> np.ndarray:
-        """
-        Get the image data from a specific frame and image number.
-
-        Args:
-            image_number (int, optional): The index of the image within the frame. Defaults to 0.
-
-        Returns:
-            np.ndarray: The image data as a NumPy array.
-        """
-        warn("LVSet.get_image is deprecated, use LVFrame.get_image instead.", DeprecationWarning, stacklevel=2)
-        return self.frame.images[image_number]
-
-    @staticmethod
-    @DeprecationWarning
-    def get_frame_time(frame:ImageFrame) -> float:
-        """
-        Get the time information in the frame.
-
-        Args:
-            frame (lv.Frame): The frame from which to extract time information.
-
-        Returns:
-            float: The acquisition time of the frame in microseconds.
-        """
-        warn("LVSet.get_frame_time is deprecated, use LVFrame.get_frame_time instead.", DeprecationWarning, stacklevel=2)
-        att = frame.attributes
-        ATS = float(att['AcqTimeSeries'].split(' ')[0])
-        AT = att['Acq.Time'][0][0]
-        return ATS + AT
-
-    @staticmethod
-    @DeprecationWarning
     def get_frame_shape(frame:ImageFrame) -> tuple[int, int]:
         """
         Get the shape of the frame.
