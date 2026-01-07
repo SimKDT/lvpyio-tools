@@ -42,6 +42,9 @@ class LVSet():
         """
         Safeguard to make sure the set gets closed.
         """
+        self.close()
+
+    def close(self):
         self.set.close()
 
     def get_frame_count(self) -> int:

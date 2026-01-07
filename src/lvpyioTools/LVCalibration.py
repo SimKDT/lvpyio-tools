@@ -3,10 +3,10 @@ Created on Sep, 2025
 
 @author: S. CADET
 """
-from typing_extensions import deprecated
 import numpy as np
 import xml.etree.ElementTree as ET
 import copy
+import warnings
 from typing import overload
 
 
@@ -149,7 +149,7 @@ class LVCalibration:
 
 
 ## DEPRECATED
-    @deprecated("This method is deprecated and will be removed in future versions. Use evaluate_I and evaluate_J instead.")
+    
     def XY_2_ij(self, x: np.ndarray|float, y: np.ndarray|float) -> tuple[np.ndarray|float, np.ndarray|float]:
         """
         Get the pixel indices (i, j) of a point in the frame based on its physical coordinates (X, Y) and the calibration settings.
@@ -161,6 +161,7 @@ class LVCalibration:
         Returns:
             tuple[int, int]: The pixel indices (i, j) corresponding to the physical coordinates.
         """
+        warnings.warn("This method is deprecated and will be removed in future versions. Use evaluate_I and evaluate_J instead.", DeprecationWarning)
         calibration = self.calibration
         if calibration is None:
             raise ValueError("Calibration settings are not provided.")
@@ -183,7 +184,6 @@ class LVCalibration:
 
         return i, j
 
-    @deprecated("This method is deprecated and will be removed in future versions. Use evaluate_X and evaluate_Y instead.")
     def ij_2_XY(self, i: float | np.ndarray, j: float | np.ndarray) -> tuple[float | np.ndarray, float | np.ndarray]:
         """
         Get the physical coordinates (X, Y) of a point in the frame based on its pixel indices (i, j) and the calibration settings.
@@ -195,6 +195,7 @@ class LVCalibration:
         Returns:
             tuple[float or np.ndarray, float or np.ndarray]: The physical coordinates (X, Y) in the calibrated space. If input is an array, output will be arrays of the same shape.
         """
+        warnings.warn("This method is deprecated and will be removed in future versions. Use evaluate_X and evaluate_Y instead.", DeprecationWarning)
         calibration = self.calibration
         if calibration is None:
             raise ValueError("Calibration settings are not provided.")
