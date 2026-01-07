@@ -3,9 +3,11 @@ Created on Sep, 2025
 
 @author: S. CADET
 """
+from typing_extensions import deprecated
 import numpy as np
 import xml.etree.ElementTree as ET
 import copy
+from typing import overload
 
 
 class LVCalibration:
@@ -40,6 +42,9 @@ class LVCalibration:
             calibration["automatic"] = False
         
         self.calibration = calibration
+
+    def __repr__(self):
+        return f"LVCalibration(calibration={self.calibration})"
 
     def copy(self) -> 'LVCalibration':
         """
@@ -93,8 +98,59 @@ class LVCalibration:
         element_value = axis_calibration.get(element, None)
         assert element_value is not None, f"Element '{element}' not found in calibration for axis '{axis}'."
         return element_value
+    
+    def check_calibration(self):
+        calibration = self.calibration
+        if calibration is None:
+            raise ValueError("Calibration settings are not provided.")
+        return calibration
+    
+    @overload
+    def evaluate_X(self, i: np.ndarray) -> np.ndarray: ...
+    @overload
+    def evaluate_X(self, i: float) -> float: ...
+    def evaluate_X(self, i: float|np.ndarray) -> float|np.ndarray:
+        calibration = self.check_calibration()
+        grid_calibration = calibration["grid"]
+        x_calibration = calibration['x']
+        return (i * x_calibration['slope'] * grid_calibration["x"]) + x_calibration['offset']
 
-    def XY_2_ij(self, x, y) -> tuple[int|np.ndarray, int|np.ndarray]:
+
+    @overload
+    def evaluate_Y(self, j: np.ndarray) -> np.ndarray: ...
+    @overload
+    def evaluate_Y(self, j: float) -> float: ...
+    def evaluate_Y(self, j: float|np.ndarray) -> float|np.ndarray:
+        calibration = self.check_calibration()
+        grid_calibration = calibration["grid"]
+        y_calibration = calibration['y']
+        return (j * y_calibration['slope'] * grid_calibration["y"]) + y_calibration['offset']
+
+    @overload
+    def evaluate_I(self, x: np.ndarray) -> np.ndarray: ...
+    @overload
+    def evaluate_I(self, x: float) -> float: ...
+    def evaluate_I(self, x: float|np.ndarray) -> float|np.ndarray:
+        calibration = self.check_calibration()
+        grid_calibration = calibration["grid"]
+        x_calibration = calibration['x']
+        return (x - x_calibration['offset']) / (x_calibration['slope'] * grid_calibration["x"])
+
+    @overload
+    def evaluate_J(self, y: np.ndarray) -> np.ndarray: ...
+    @overload
+    def evaluate_J(self, y: float) -> float: ...
+    def evaluate_J(self, y: float|np.ndarray) -> float|np.ndarray:
+        calibration = self.check_calibration()
+        grid_calibration = calibration["grid"]
+        y_calibration = calibration['y']
+        return (y - y_calibration['offset']) / (y_calibration['slope'] * grid_calibration["y"])
+
+
+
+## DEPRECATED
+    @deprecated("This method is deprecated and will be removed in future versions. Use evaluate_I and evaluate_J instead.")
+    def XY_2_ij(self, x: np.ndarray|float, y: np.ndarray|float) -> tuple[np.ndarray|float, np.ndarray|float]:
         """
         Get the pixel indices (i, j) of a point in the frame based on its physical coordinates (X, Y) and the calibration settings.
 
@@ -127,16 +183,17 @@ class LVCalibration:
 
         return i, j
 
-    def ij_2_XY(self, i: float|np.ndarray, j: float|np.ndarray) -> tuple[float|np.ndarray, float|np.ndarray]:
+    @deprecated("This method is deprecated and will be removed in future versions. Use evaluate_X and evaluate_Y instead.")
+    def ij_2_XY(self, i: float | np.ndarray, j: float | np.ndarray) -> tuple[float | np.ndarray, float | np.ndarray]:
         """
         Get the physical coordinates (X, Y) of a point in the frame based on its pixel indices (i, j) and the calibration settings.
 
         Args:
-            i (int): The pixel index along the X-axis (horizontal).
-            j (int): The pixel index along the Y-axis (vertical).
+            i (float or np.ndarray): The pixel index along the X-axis (horizontal). Can be a float or a numpy array of floats.
+            j (float or np.ndarray): The pixel index along the Y-axis (vertical). Can be a float or a numpy array of floats.
 
         Returns:
-            tuple[float, float]: The physical coordinates (X, Y) in the calibrated space.
+            tuple[float or np.ndarray, float or np.ndarray]: The physical coordinates (X, Y) in the calibrated space. If input is an array, output will be arrays of the same shape.
         """
         calibration = self.calibration
         if calibration is None:
@@ -195,3 +252,14 @@ def get_calibration(calibration_file:str) -> LVCalibration:
     }
 
     return LVCalibration(calibration_data)
+
+
+if __name__ == "__main__":
+    i = np.array([0, 10, 20])
+    j = np.array([0, 5, 10])
+    lv_calibration = get_calibration("path/to/calibration.xml")
+    x = lv_calibration.evaluate_X(i)
+    y = lv_calibration.evaluate_Y(j)
+
+    m, M = x.min(), x.max()
+    print("Physical coordinates (X, Y):", x, y)
