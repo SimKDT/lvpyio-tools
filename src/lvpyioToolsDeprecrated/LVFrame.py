@@ -6,7 +6,7 @@ Created on Sep, 2025
 import numpy as np
 from lvpyio.types.frame import ImageFrame
 
-from lvpyioTools.LVCalibration import LVCalibration
+from lvpyioToolsDeprecrated.LVCalibration import LVCalibration
 
 
 

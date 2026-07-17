@@ -1,8 +1,14 @@
 [project]
 name = "lvpyioTools"
-version = "1.2.0"
+description = "A set of tools to handle LabView files and data via the lvpyio library."
+version = "2.0.0"
+license = "MIT"
+license-files = ["LICENSE"]
+authors = [
+  { name = "SimKDT", email = "simon.cadet79@gmail.com" },
+]
 dependencies = [
     "numpy",
     "tqdm",
-    "lvpyio"
+    "lvpyio",
 ]

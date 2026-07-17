@@ -18,7 +18,7 @@ from tqdm import tqdm
 
 from warnings import warn
 
-from lvpyioTools.LVFrame import LVFrame
+from lvpyioToolsDeprecrated.LVFrame import LVFrame
 
 class LVSet():
     def __init__(self, file):

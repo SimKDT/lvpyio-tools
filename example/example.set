@@ -1,0 +1,13 @@
+// set file <example/example.set> created by DaVis
+
+#GROUP Sets
+SetType = 256;
+SetGroups = "";
+SetTime = "Fri Jul 17 15:42:54 2026";
+SetComments = "";
+SetStart = 1;
+SetInc = 1;
+SetSourceSet = "";
+SetViewCallback = "";
+SetLoadCallback = "";
+bpInfoString = "2025-11-10 21:17:23: create time-series from multiframe images";
