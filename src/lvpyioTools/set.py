@@ -131,6 +131,22 @@ class LVSet(): # numpydoc ignore=SA01
 
 ## READERS
 
+    def get_frame(self, buffer_frame: int) -> ImageFrame:
+        if self.set is None:
+            raise RuntimeError("Set is not open. Please call 'open()' before accessing frames.")
+        
+        size = len(self)
+        if buffer_frame < 0 or buffer_frame >= size:
+            raise IndexError(f"Buffer frame index {buffer_frame} is out of range. Valid range is 0 to {size - 1}.")
+        
+        frame = self.set[buffer_frame]
+        return frame
+
+    def get_image(self, buffer_frame: int, 
+                  frame_number: int = 0, 
+                  image_number: int = 0):
+        frame = self.get_frame(buffer_frame)
+        return frame[frame_number]
 
 
 
