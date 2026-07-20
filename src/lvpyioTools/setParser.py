@@ -97,3 +97,9 @@ if __name__ == "__main__":
 
         if SetProperty.SetTime in set_dict:
             echo.info(f"SetTime: {set_dict[SetProperty.SetTime].isoformat()}")
+
+
+    outside_set = Path("/media/scadet03/CADET_MAIN/Manips/2025-10/data.2025-10.piv/temporary_calibration_ref_data/jonc_1/f=0.8, S0=0.05, d=0.06, N=1.0/Scale.set")
+    echo.path(outside_set)
+    set_dict = read(outside_set)
+    pprint(set_dict)
