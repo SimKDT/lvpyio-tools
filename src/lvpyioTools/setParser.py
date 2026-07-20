@@ -6,6 +6,8 @@ from pylogs import echo
 from lvpyioTools.setProperties import SetProperty, property_types
 
 
+_PROPERTY_PATTERN = r"(?P<property>\w+) = \"?(?P<value>[\S\s]*?)\"?;"
+
 
 def read_property(key: str, value: str):
     """
@@ -64,16 +66,16 @@ def read(file: Path) -> dict[SetProperty, Any]:
     # extract lines after "#GROUP Sets"
     set_lines = lines[group_line_index + 1:]
 
-    # each lines have this shape: "property = value;"
+    import re
     set_dict = {}
     for line in set_lines:
         line = line.strip()
         if not line or line.startswith("#"):
             continue  # skip empty lines and comments
-        if '=' in line:
-            key, value = line.split('=', 1)
-            key = key.strip()
-            value = value.strip().rstrip(';')  # remove trailing semicolon
+        match = re.match(_PROPERTY_PATTERN, line)
+        if match:
+            key = match.group('property')
+            value = match.group('value')
 
             prop, value = read_property(key, value)
             if prop is None:

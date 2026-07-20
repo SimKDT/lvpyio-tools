@@ -2,7 +2,6 @@
 Helper class for working with lvpyio sets.
 """
 from pathlib import Path
-from enum import Enum
 from typing import Any
 
 import lvpyio as lv
@@ -53,6 +52,7 @@ class LVSet(): # numpydoc ignore=SA01
             raise ValueError(f"Provided file {file} is not a .set file.")
 
         self.file = file
+        self.properties = self.get_properties()
 
 
 ## LOADER / SAVER

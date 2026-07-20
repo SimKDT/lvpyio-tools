@@ -1,20 +1,40 @@
 from enum import Enum, StrEnum
 from datetime import datetime
+import locale
 
 from pylogs import echo
 
-def _read_str(value: str) -> str:
-    return str(value.strip('"').strip("'"))
+def _read_date(value: str) -> datetime | None:
+    """
+    Read the .set file date format and convert into datetime object.
+    The date uses english format, e.g. "Fri Sep 26 11:25:26 2025",
+    so conversion to a specific locale is needed to ensure correct parsing regardless of the system locale.
 
-def _read_date(value: str) -> datetime:
-    value = _read_str(value) # remove quotes
+    See:
+    https://stackoverflow.com/questions/38303217/datetime-strptime-unexpected-behavior-locale-issue
 
-    # interpret date with format "Fri Sep 26 11:25:26 2025"
+    Args:
+        value (str): The date string from the .set file.
+
+    Returns:
+        datetime | None: The corresponding datetime object, or `None` if parsing failed.
+    """
     try:
-        return datetime.strptime(value, "%a %b %d %H:%M:%S %Y")
+        # use 'C' locale to ensure parsing works regardless of system locale
+        old_locale = locale.setlocale(locale.LC_TIME)
+        try:
+            locale.setlocale(locale.LC_TIME, 'C')
+            return datetime.strptime(value, "%a %b %d %H:%M:%S %Y")
+        finally:
+            # restore original locale
+            try:
+                locale.setlocale(locale.LC_TIME, old_locale)
+            except locale.Error:
+                # restoration fails, just proceed
+                pass
     except ValueError:
         echo.error(f"Could not parse date from value '{value}'")
-        raise
+        return None
 
 
 
@@ -24,16 +44,16 @@ class SetType(Enum):
     """
     IMAGE = 256
     """`.im7` images"""
-    FOLDER = 16384
-    """Simple folder"""
+    VECTORS = 512
+    """`.vc7` files"""
     CINE = 4352
     """`.cine` file"""
     PROPERTIES = 8192
     """`Properties` folder"""
+    FOLDER = 16384
+    """Simple folder"""
     CALIBRATION = 131072
     """Calibration set"""
-    VECTORS = 512
-    """`.vc7` files"""
 
 def _read_set_type(value: str) -> SetType | None:
     """
@@ -45,7 +65,6 @@ def _read_set_type(value: str) -> SetType | None:
     Returns:
         SetType: The corresponding `SetType` enum member.
     """
-    value = _read_str(value) # remove quotes
     # convert to int
     try:
         value_int = int(value)
@@ -53,6 +72,7 @@ def _read_set_type(value: str) -> SetType | None:
         echo.error(f"Could not convert value '{value}' to int for SetType")
         return None
     
+    # try to convert to SetType
     try:
         return SetType(value_int)
     except ValueError:
@@ -78,16 +98,16 @@ class SetProperty(StrEnum):
 
 property_types = {
     SetProperty.SetType: _read_set_type,
-    SetProperty.SetGroups: _read_str,
+    SetProperty.SetGroups: str,
     SetProperty.SetTime: _read_date,
-    SetProperty.SetComments: _read_str,
+    SetProperty.SetComments: str,
     SetProperty.SetStart: int,
     SetProperty.SetInc: int,
-    SetProperty.SetSourceSet: _read_str,
-    SetProperty.SetViewCallback: _read_str,
-    SetProperty.SetLoadCallback: _read_str,
-    SetProperty.bpInfoString: _read_str,
-    SetProperty.SetIdentifier: _read_str,
+    SetProperty.SetSourceSet: str,
+    SetProperty.SetViewCallback: str,
+    SetProperty.SetLoadCallback: str,
+    SetProperty.bpInfoString: str,
+    SetProperty.SetIdentifier: str,
 }
 """Associate each SetProperty to a function or type for convertion to a specific type."""
 
