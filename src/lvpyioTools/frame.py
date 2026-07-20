@@ -32,6 +32,9 @@ class LVFrame():
     def __len__(self):
         return len(self.frame.images)
 
+    def __repr__(self):
+        return f"<LVFrame: {len(self.frame.images)} images, shape={self.frame.shape}>"
+
     def shape(self):
         """
         Get the images and masks shapes.

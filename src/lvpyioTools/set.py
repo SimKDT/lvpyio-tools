@@ -55,11 +55,18 @@ class LVSet(): # numpydoc ignore=SA01
             raise FileNotFoundError(f"File {file} does not exist.")
         if not file.is_file():
             raise ValueError(f"Provided path {file} is not a file.")
-        if not file.suffix == ".set":
-            raise ValueError(f"Provided file {file} is not a .set file.")
+        if not file.suffix in [".set", ".exp"]:
+            raise ValueError(f"Provided file {file} is not a .set or .exp file.")
 
         self.file = file
         self.properties = self.get_properties()
+
+    def __repr__(self):
+        if self.is_experiment():
+            return f"<LVSet: {self.file.name}, experiment set, properties={len(self.properties)}>"
+        if self.is_open():
+            return f"<LVSet: {self.file.name}, {len(self)} frames, properties={len(self.properties)}>"
+        return f"<LVSet: {self.file.name}, closed, properties={len(self.properties)}>"
 
 
 ## LOADER / SAVER
@@ -86,12 +93,23 @@ class LVSet(): # numpydoc ignore=SA01
         """
         self.close()
 
+    def is_open(self) -> bool:
+        """
+        Check if the set is currently open.
+
+        Returns:
+            bool: True if the set is open, False otherwise.
+        """
+        return self.set is not None
+
     def open(self):
         """
         Load the set with lvpyio.
         """
         # safeguard to ensure we properly close the set
         self.close()
+        if self.is_experiment():
+            raise ValueError(f"Cannot open an experiment set (`.exp`) directly.")
         self.set = lv.read_set(self.file)
 
     def close(self):
@@ -102,6 +120,48 @@ class LVSet(): # numpydoc ignore=SA01
             return
         self.set.close()
         self.set = None
+
+
+## PARENTS / CHILDREN
+
+    def is_experiment(self) -> bool:
+        """
+        Check if the set is an experiment set (`.exp`).
+        """
+        return self.file.suffix == ".exp"
+
+    def get_parent(self) -> 'LVSet | None':
+        isParent = self.is_experiment()
+        if isParent:
+            return None
+
+        # get parent theorical path
+        set_dir = self.file.parent
+        parent_dir = set_dir.parent
+
+        # find .set or .exp file if exists
+        for suffix in [".set", ".exp"]:
+            # try to access the set file
+            parent_set_file = parent_dir / (set_dir.name + suffix)
+            if parent_set_file.exists():
+                return LVSet(parent_set_file)
+
+        return None
+    
+    def get_experiment(self, max_iteration=100) -> 'LVSet | None':
+        current_set = self
+        iteration = 0
+        while current_set is not None:
+            if current_set.is_experiment():
+                return current_set
+            current_set = current_set.get_parent()
+
+            # stop after too many iterations to avoid infinite loops
+            iteration += 1
+            if iteration > max_iteration:
+                echo.warning(f"Reached maximum iteration ({max_iteration}) while searching for experiment set. Stopping search.")
+                break
+        return None
 
 ## GENERIC INFORMATION ABOUT THE SET
 
@@ -200,6 +260,8 @@ if __name__ == "__main__":
         frame = set.get_frame(0)
         print(frame)
 
+    print()
+
     outside_set = Path("/media/scadet03/CADET_MAIN/Manips/2025-10/data.2025-10.piv/temporary_calibration_ref_data/jonc_1/f=0.8, S0=0.05, d=0.06, N=1.0/Scale.set")
     echo.path(outside_set)
     with LVSet(outside_set) as set:
@@ -209,3 +271,22 @@ if __name__ == "__main__":
         buffer = set.get_buffer(0)
         frame = set.get_frame(0)
         print(frame)
+
+    print()
+
+    outside_set = Path("/media/scadet03/CADET_MAIN/Manips/2025-10/data.2025-10.piv/DaVis/Upstream/jonc_1/f=0.7, S0=0.05, d=0.06, N=1.0/1/1.set")
+    echo.path(outside_set)
+    with LVSet(outside_set) as set:
+        print(set)
+        print(f"Number of frames in the set: {len(set)}")
+
+        buffer = set.get_buffer(0)
+        frame = set.get_frame(0)
+        print(frame)
+
+        parent = set.get_parent()
+        echo.path(parent.file if parent is not None else "No parent set found.")
+
+        experiment = set.get_experiment()
+        print(experiment)
+        echo.path(experiment.file if experiment is not None else "No experiment set found.")
