@@ -10,7 +10,7 @@ from lvpyio.types.frame import ImageFrame
 from lvpyio.types.buffer import Buffer
 from lvpyio.io.set import Set
 
-from lvpyioTools import setParser
+from lvpyioTools import setParser, calibration
 from lvpyioTools.frame import LVFrame
 
 
@@ -162,6 +162,21 @@ class LVSet(): # numpydoc ignore=SA01
                 echo.warning(f"Reached maximum iteration ({max_iteration}) while searching for experiment set. Stopping search.")
                 break
         return None
+    
+    def get_calibration(self):
+        experiment = self.get_experiment()
+        if experiment is None:
+            echo.warning(f"No experiment set found for {self.file}. Cannot retrieve calibration.")
+            return None
+
+        # get calibration file
+        calibration_file = experiment.file.with_suffix("") / "Properties" / "Calibration" / "Calibration.xml"
+        if not calibration_file.exists():
+            echo.warning(f"Calibration file {calibration_file} does not exist. Cannot retrieve calibration.")
+            return None
+        
+        return calibration.get_calibration(calibration_file)
+
 
 ## GENERIC INFORMATION ABOUT THE SET
 
@@ -290,3 +305,6 @@ if __name__ == "__main__":
         experiment = set.get_experiment()
         print(experiment)
         echo.path(experiment.file if experiment is not None else "No experiment set found.")
+
+        calib = set.get_calibration()
+        print(calib)
