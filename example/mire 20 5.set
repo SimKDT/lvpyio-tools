@@ -1,0 +1,13 @@
+// set file <E:/2025-09 - Bassin de traction/test/mire_01.set> created by DaVis
+
+#GROUP Sets
+SetType = 4352;
+SetGroups = "";
+SetTime = "Fri Oct 03 16:34:08 2025";
+SetComments = "";
+SetStart = 1;
+SetInc = 1;
+SetSourceSet = "";
+SetViewCallback = "";
+SetLoadCallback = "";
+SetIdentifier = "StreamSet";

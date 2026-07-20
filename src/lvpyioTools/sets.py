@@ -3,6 +3,7 @@ Helper class for working with lvpyio sets.
 """
 from pathlib import Path
 from enum import Enum
+from typing import Any
 
 import lvpyio as lv
 # from lvpyio.types
@@ -10,11 +11,7 @@ from lvpyio.types.frame import ImageFrame
 from lvpyio.types.buffer import Buffer
 from lvpyio.io.set import Set
 
-
-
-class SetType(Enum):
-    IMAGE = 256 # im7 images
-    FOLDER = 16384 # simple folder
+from lvpyioTools import setParser
 
 
 
@@ -115,24 +112,36 @@ class LVSet(): # numpydoc ignore=SA01
             raise RuntimeError("Set is not open. Please call 'open()' before accessing the length.")
         return len(self.set)
 
-    def get(self) -> str:
+    def read(self) -> str:
         """
         Read the set file and display its content.
         """
         with open(self.file, 'r') as f:
             return f.read().strip()
 
+    def get_properties(self) -> dict[setParser.SetProperty, Any]:
+        """
+        Read the set file and return its properties as a dictionary.
+
+        Returns:
+            dict[SetProperty, Any]: A dictionary containing the set properties and their values.
+        """
+        return setParser.read(self.file)
+
 
 ## READERS
 
-    
+
 
 
 
 if __name__ == "__main__":
+    from pprint import pprint
+    from pylogs import echo
     # Example usage
     set_file = Path("example/example.set")
+    echo.path(set_file)
     with LVSet(set_file) as set:
-        print(set.get())
+        pprint(set.get_properties())
         print(f"Number of frames in the set: {len(set)}")
 

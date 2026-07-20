@@ -11,4 +11,5 @@ dependencies = [
     "numpy",
     "tqdm",
     "lvpyio",
+    "pylogs @ git+https://github.com/SimKDT/pylogs.git",
 ]
