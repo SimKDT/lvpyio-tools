@@ -10,6 +10,7 @@ import lvpyio as lv
 # from lvpyio.types
 from lvpyio.types.frame import ImageFrame
 from lvpyio.types.buffer import Buffer
+from lvpyio.types.scale import Scales
 from lvpyio.io.set import Set
 
 from lvpyioTools import setParser, calibration
@@ -133,6 +134,12 @@ class LVSet(): # numpydoc ignore=SA01
         return self.file.suffix == ".exp"
 
     def get_parent(self) -> 'LVSet | None':
+        """
+        Retrieve parent set holding this current set if exists. If the current set is an experiment set, it has no parent and this method will return None.
+
+        Returns:
+            LVSet | None: The parent set if it exists, otherwise None.
+        """
         isParent = self.is_experiment()
         if isParent:
             return None
@@ -150,7 +157,16 @@ class LVSet(): # numpydoc ignore=SA01
 
         return None
     
-    def get_experiment(self, max_iteration=100) -> 'LVSet | None':
+    def get_experiment(self, max_iteration: int = 100) -> 'LVSet | None':
+        """
+        Retrieve the experiment set holding this current set if exists.
+
+        Args:
+            max_iteration (int, optional): Maximum number of iterations to search for the experiment set. Defaults to 100.
+
+        Returns:
+            LVSet | None: The experiment set if it exists, otherwise None.
+        """
         current_set = self
         iteration = 0
         while current_set is not None:
@@ -165,7 +181,30 @@ class LVSet(): # numpydoc ignore=SA01
                 break
         return None
     
-    def get_calibration(self):
+    def get_children(self) -> list['LVSet']:
+        """
+        Retrieve all child sets of the current set.
+
+        Returns:
+            list[LVSet]: A list of child sets.
+        """
+        children = []
+        set_dir = self.file.parent
+        for child_dir in set_dir.iterdir():
+            if child_dir.is_dir():
+                for suffix in [".set", ".exp"]:
+                    child_set_file = child_dir / (child_dir.name + suffix)
+                    if child_set_file.exists():
+                        children.append(LVSet(child_set_file))
+        return children
+    
+    def get_calibration(self) -> 'Scales | None':
+        """
+        Retrieve the calibration settings from the experiment set if it exists.
+
+        Returns:
+            Scales | None: The calibration settings if they exist, otherwise None.
+        """
         experiment = self.get_experiment()
         if experiment is None:
             echo.warning(f"No experiment set found for {self.file}. Cannot retrieve calibration.")
