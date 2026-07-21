@@ -111,3 +111,13 @@ class LVFrame():
             Any: The value of the requested attribute, or `None` if the attribute is not found in the frame.
         """
         return self.frame.attributes.get(attribute.value, None)
+    
+    def get_max_intensity(self):
+        max_intensity = self.get_attribute(FrameAttribute.CAMERA_MAX_INTENSITY)
+        if max_intensity is not None:
+            try:
+                return float(max_intensity)
+            except ValueError:
+                raise ValueError(f"Invalid CAMERA_MAX_INTENSITY value: {max_intensity}")
+        else:
+            raise ValueError("CAMERA_MAX_INTENSITY attribute not found in frame.")
