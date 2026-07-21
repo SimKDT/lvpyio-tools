@@ -1,6 +1,7 @@
 """
 Show a specific image from a DaVis set file.
 """
+from pathlib import Path
 
 from .set import LVSet
 
@@ -14,7 +15,7 @@ def main():
     parser.add_argument("--image", type=int, default=0, help="Image number to display (default: 0)")
     args = parser.parse_args()
 
-    with LVSet(args.set) as lv_set:
+    with LVSet(Path(args.set)) as lv_set:
         try:
             frame = lv_set.get_frame(args.buffer, args.frame)
             frame.show(image_number=args.image)
