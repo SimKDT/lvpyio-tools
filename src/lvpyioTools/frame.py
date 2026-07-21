@@ -61,17 +61,25 @@ class LVFrame():
             raise IndexError(f"Image number {image_number} is out of range. Available images: 0 to {len(self.frame.images)-1}.")
         return self.frame.images[image_number]
 
-    def show(self, image_number: int = 0):
+    def show(self, image_number: int = 0, 
+             vmin: float | None = None, vmax: float | None = None,
+             cmap: str = 'gray',
+             _show: bool = True):
         """
         Display the image data from a specific frame and image number using the default image viewer.
 
         Args:
             image_number (int, optional): The index of the image to display. Defaults to 0.
         """
-        from PIL import Image
+        import matplotlib.pyplot as plt
         image_data = self.get(image_number)
-        img = Image.fromarray(image_data)
-        img.show()
+        fig, ax = plt.subplots()
+        ax.imshow(image_data, cmap=cmap, vmin=vmin, vmax=vmax)
+        ax.axis('off')
+        plt.tight_layout()
+        if _show:
+            plt.show()
+        return fig, ax
 
     def scale(self) -> Scales:
         """
