@@ -113,6 +113,15 @@ class LVFrame():
         return self.frame.attributes.get(attribute.value, None)
     
     def get_max_intensity(self):
+        """
+        Get the maximum intensity of the pixel values from the frame.
+
+        Raises:
+            ValueError: If the CAMERA_MAX_INTENSITY attribute is not found or is invalid.
+
+        Returns:
+            float: The maximum intensity value of the pixel values from the frame.
+        """
         max_intensity = self.get_attribute(FrameAttribute.CAMERA_MAX_INTENSITY)
         if max_intensity is not None:
             try:
