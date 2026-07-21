@@ -50,7 +50,7 @@ class LVSet(): # numpydoc ignore=SA01
     ```
     """
     set: Set | None = None
-    frame: LVFrame | None = None
+    frames: tuple[LVFrame, ...] | None = None
 
     def __init__(self, file: Path):
         # verify provided file
@@ -277,6 +277,21 @@ class LVSet(): # numpydoc ignore=SA01
             raise IndexError(f"Buffer frame index {buffer_frame} is out of range. Valid range is 0 to {size - 1}.")
         return self.set[buffer_frame]
 
+    def get_frames(self, buffer_frame: int) -> tuple[LVFrame, ...]:
+        buffer = self.get_buffer(buffer_frame)
+        
+        # init LVFrame instances for each frame in the buffer
+        if self.frames is None:
+            frames_count = len(buffer)
+            self.frames = tuple(LVFrame(buffer[i], self) for i in range(frames_count))
+
+        # if already exists, then simply replace the frames in the existing LVFrame instances
+        else:
+            for i in range(len(buffer)):
+                self.frames[i].replace_frame(buffer[i])
+
+        return self.frames
+
     def get_frame(self, buffer_frame: int, frame_number: int = 0) -> LVFrame:
         """
         Get a specific frame from a buffer in the set.
@@ -288,13 +303,10 @@ class LVSet(): # numpydoc ignore=SA01
         Returns:
             LVFrame: The requested frame object.
         """
-        buffer = self.get_buffer(buffer_frame)
-        frame: ImageFrame = buffer[frame_number]
-        if self.frame is None:
-            self.frame = LVFrame(frame, self)
-        else:
-            self.frame.replace_frame(frame)
-        return self.frame
+        frames = self.get_frames(buffer_frame)
+        if frame_number < 0 or frame_number >= len(frames):
+            raise IndexError(f"Frame number {frame_number} is out of range. Valid range is 0 to {len(frames) - 1}.")
+        return frames[frame_number]
 
     def get_image(self, buffer_frame: int, 
                   frame_number: int = 0, 
