@@ -1,0 +1,3 @@
+[submodule "doc"]
+	path = doc
+	url = https://src.koda.cnrs.fr/dftc-h2/lvpyio-tools.wiki.git
