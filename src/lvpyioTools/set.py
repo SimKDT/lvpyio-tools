@@ -4,6 +4,8 @@ Helper class for working with lvpyio sets.
 from pathlib import Path
 from typing import Any
 
+from PIL import Image
+
 import lvpyio as lv
 # from lvpyio.types
 from lvpyio.types.frame import ImageFrame
@@ -252,7 +254,20 @@ class LVSet(): # numpydoc ignore=SA01
         return frame.get(image_number)
 
 
+## EXPORTS
 
+    def export(self, output_dir: Path, extension: str = ".tif"):
+        if not self.is_open():
+            raise RuntimeError("Set is not open. Please call `open()` before exporting.")
+        output_dir.mkdir(parents=True, exist_ok=True)
+        for buffer_frame in range(len(self)):
+            image = self.get_image(buffer_frame)
+            output_file = output_dir / f"buffer_{buffer_frame:05d}{extension}"
+            img = Image.fromarray(image)
+            img.save(output_file)
+
+
+## TEST SCRIPTS
 
 if __name__ == "__main__":
     from pprint import pprint

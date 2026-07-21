@@ -11,6 +11,7 @@ authors = [
 dependencies = [
     "numpy",
     "tqdm",
+    "Pillow",
     "lvpyio",
     "pylogs @ git+https://github.com/SimKDT/pylogs.git",
 ]
