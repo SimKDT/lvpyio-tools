@@ -278,6 +278,16 @@ class LVSet(): # numpydoc ignore=SA01
         return self.set[buffer_frame]
 
     def get_frame(self, buffer_frame: int, frame_number: int = 0) -> LVFrame:
+        """
+        Get a specific frame from a buffer in the set.
+
+        Args:
+            buffer_frame (int): The index of the buffer frame to retrieve the frame from.
+            frame_number (int, optional): The index of the frame within the buffer. Defaults to 0.
+
+        Returns:
+            LVFrame: The requested frame object.
+        """
         buffer = self.get_buffer(buffer_frame)
         frame: ImageFrame = buffer[frame_number]
         if self.frame is None:
@@ -289,6 +299,17 @@ class LVSet(): # numpydoc ignore=SA01
     def get_image(self, buffer_frame: int, 
                   frame_number: int = 0, 
                   image_number: int = 0):
+        """
+        Get a specific image from a frame in a buffer in the set.
+
+        Args:
+            buffer_frame (int): The index of the buffer frame to retrieve the image from.
+            frame_number (int, optional): The index of the frame within the buffer. Defaults to 0.
+            image_number (int, optional): The index of the image within the frame. Defaults to 0.
+
+        Returns:
+            Image: The requested image object.
+        """
         frame = self.get_frame(buffer_frame, frame_number)
         return frame.get(image_number)
 
