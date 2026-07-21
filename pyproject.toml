@@ -2,7 +2,7 @@
 name = "lvpyioTools"
 description = "A set of tools to handle LabView files and data via the lvpyio library."
 requires-python = ">=3.12.3"
-version = "2.3.0"
+version = "2.4.0"
 license = "MIT"
 license-files = ["LICENSE"]
 authors = [
@@ -15,3 +15,6 @@ dependencies = [
     "lvpyio",
     "pylogs @ git+https://github.com/SimKDT/pylogs.git",
 ]
+
+[project.scripts]
+lvpyioShow = "lvpyioTools.viewer:main"

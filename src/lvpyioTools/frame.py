@@ -61,6 +61,18 @@ class LVFrame():
             raise IndexError(f"Image number {image_number} is out of range. Available images: 0 to {len(self.frame.images)-1}.")
         return self.frame.images[image_number]
 
+    def show(self, image_number: int = 0):
+        """
+        Display the image data from a specific frame and image number using the default image viewer.
+
+        Args:
+            image_number (int, optional): The index of the image to display. Defaults to 0.
+        """
+        from PIL import Image
+        image_data = self.get(image_number)
+        img = Image.fromarray(image_data)
+        img.show()
+
     def scale(self) -> Scales:
         """
         Read the scale information from the frame, that is a class containing the following attributes:
