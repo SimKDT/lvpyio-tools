@@ -4,14 +4,14 @@ A collection of tools to manipulate lvpyio objects such as Sets.
 ## Installation
 
 ```bash
-pip install lvpyio-tools
+pip install .
 ```
 
 ## Usage
 
 ```python
 from pathlib import Path
-from lvpyioTools import LVSet
+from lvpyioTools.set import LVSet
 
 set_file = Path("path/to/your/set.set")
 with LVSet(set_file) as lv_set:
