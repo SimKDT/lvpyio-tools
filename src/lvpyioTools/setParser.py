@@ -3,7 +3,7 @@ from typing import Any
 
 from pylogs import echo
 
-from lvpyioTools.setProperties import SetProperty, property_types
+from .setProperties import SetProperty, property_types
 
 
 _PROPERTY_PATTERN = r"(?P<property>\w+) = \"?(?P<value>[\S\s]*?)\"?;"

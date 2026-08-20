@@ -8,9 +8,9 @@ from enum import StrEnum
 from lvpyio.types.frame import ImageFrame
 from lvpyio.types.scale import Scales
 
-from lvpyioTools.attribute import FrameAttribute
+from .attribute import FrameAttribute
 if TYPE_CHECKING:
-    from lvpyioTools.set import LVSet
+    from .set import LVSet
 
 class LVFrame():
     """

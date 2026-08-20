@@ -13,8 +13,8 @@ from lvpyio.types.buffer import Buffer
 from lvpyio.types.scale import Scales
 from lvpyio.io.set import Set
 
-from lvpyioTools import setParser, calibration
-from lvpyioTools.frame import LVFrame
+from . import setParser, calibration
+from .frame import LVFrame
 
 
 
