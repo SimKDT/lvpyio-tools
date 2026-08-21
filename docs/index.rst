@@ -34,8 +34,3 @@ License
 -------
 
 This project is licensed under the MIT License. See the LICENSE file for details.
-
-GitHub
-------
-
-Repository: `github.com/SimKDT/lvpyio-tools <https://github.com/SimKDT/lvpyio-tools>`_

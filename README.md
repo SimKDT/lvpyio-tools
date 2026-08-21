@@ -20,5 +20,15 @@ with LVSet(set_file) as lv_set:
     print(f"Properties: {lv_set.properties}")
 ```
 
+## Doc (build)
+```bash
+make html
+```
+
+Serving the documentation locally:
+```bash
+make serve
+```
+
 ## License
 See [LICENSE](LICENSE) for details.
