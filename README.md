@@ -12,7 +12,7 @@ A collection of tools to manipulate lvpyio objects such as Sets.
 <summary>PyPi</summary>
 
 ```bash
-pip install lvpyio-tools
+pip install lvpyioTools
 ```
 </details>
 
@@ -44,6 +44,8 @@ with LVSet(set_file) as lv_set:
     print(f"Number of frames: {len(lv_set)}")
     print(f"Properties: {lv_set.properties}")
 ```
+
+You can find a more in-depth documentation in the folder `docs`.
 
 ## Doc (build)
 ```bash
