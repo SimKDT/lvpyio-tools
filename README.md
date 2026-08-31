@@ -1,8 +1,8 @@
 # lvpyio-tools
 
-![License](https://img.shields.io/github/license/SimKDT/lvpyio-tools?label=License)
+[![License](https://img.shields.io/github/license/SimKDT/lvpyio-tools?label=License)](LICENSE)
 ![Code Size](https://img.shields.io/github/languages/code-size/SimKDT/lvpyio-tools?label=Code%20Size)
-![PyPi Version](https://img.shields.io/pypi/v/lvpyioTools)
+[![PyPi Version](https://img.shields.io/pypi/v/lvpyioTools)](https://pypi.org/project/lvpyioTools/)
 
 A collection of tools to manipulate lvpyio objects such as Sets.
 
