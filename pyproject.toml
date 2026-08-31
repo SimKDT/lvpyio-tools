@@ -1,7 +1,7 @@
 [project]
 name = "lvpyioTools"
 description = "A set of tools to handle LabView files and data via the lvpyio library."
-readme = { file = "README.md" }
+readme = { file = "README.md", content-type = "text/markdown" }
 requires-python = ">=3.12.3"
 version = "2.4.4"
 license = "MIT"
