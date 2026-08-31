@@ -53,7 +53,9 @@ class LVSet(): # numpydoc ignore=SA01
     set: Set | None = None
     frames: tuple[LVFrame, ...] | None = None
 
-    def __init__(self, file: Path):
+    def __init__(self, file: Path | str):
+        file = Path(file)
+
         # verify provided file
         if not file.exists():
             raise FileNotFoundError(f"File {file} does not exist.")
