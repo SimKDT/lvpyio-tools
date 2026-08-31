@@ -1,11 +1,28 @@
 # lvpyio-tools
+
+![License](https://img.shields.io/github/license/SimKDT/lvpyio-tools?label=License)
+![Downloads](https://img.shields.io/github/downloads/SimKDT/lvpyio-tools/total?label=Downloads)
+![Code Size](https://img.shields.io/github/languages/code-size/SimKDT/lvpyio-tools?label=Code%20Size)
+
 A collection of tools to manipulate lvpyio objects such as Sets.
 
 ## Installation
 
+<details open>
+<summary>Git</summary>
+
+```bash
+pip install git+https://github.com/SimKDT/lvpyio-tools.git
+```
+</details>
+
+<details>
+<summary>Local</summary>
+
 ```bash
 pip install .
 ```
+</details>
 
 ## Usage
 

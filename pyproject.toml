@@ -17,5 +17,9 @@ dependencies = [
     "pylogs @ git+https://github.com/SimKDT/pylogs.git",
 ]
 
+[project.urls]
+Homepage = "https://github.com/SimKDT/lvpyio-tools"
+Issues = "https://github.com/SimKDT/lvpyio-tools/issues"
+
 [project.scripts]
 lvpyioShow = "lvpyioTools.viewer:main"
