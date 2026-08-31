@@ -1,7 +1,6 @@
 # lvpyio-tools
 
 ![License](https://img.shields.io/github/license/SimKDT/lvpyio-tools?label=License)
-![Downloads](https://img.shields.io/github/downloads/SimKDT/lvpyio-tools/total?label=Downloads)
 ![Code Size](https://img.shields.io/github/languages/code-size/SimKDT/lvpyio-tools?label=Code%20Size)
 ![PyPi Version](https://img.shields.io/pypi/v/lvpyioTools)
 
