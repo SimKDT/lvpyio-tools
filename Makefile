@@ -25,3 +25,20 @@ serve: html
 # Catch-all target: route all unknown targets to Sphinx using the "make" target
 %: Makefile
 	@$(SPHINXBUILD) -M $@ $(ALLSPHINXOPTS) $(BUILDDIR)
+
+# PyPi release chain
+release: clean setup build upload
+
+setup:
+	python3 -m venv .venv
+	. .venv/bin/activate && pip install --upgrade pip
+	pip install --upgrade build twine
+
+clean:
+	rm -rf dist
+
+build:
+	.venv/bin/python3 -m build
+
+upload:
+	.venv/bin/python3 -m twine upload --repository pypi dist/*
