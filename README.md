@@ -4,7 +4,7 @@
 ![Code Size](https://img.shields.io/github/languages/code-size/SimKDT/lvpyio-tools?label=Code%20Size)
 [![PyPi Version](https://img.shields.io/pypi/v/lvpyioTools)](https://pypi.org/project/lvpyioTools/)
 
-A collection of tools to manipulate lvpyio objects such as Sets.
+A collection of helper tools to manipulate lvpyio objects such as Sets by using the [lvpyio](https://pypi.org/project/lvpyio/) library.
 
 ## Installation
 
