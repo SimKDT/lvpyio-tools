@@ -3,6 +3,7 @@ Helper class for working with lvpyio sets.
 """
 from pathlib import Path
 from typing import Any
+import warnings
 
 from PIL import Image
 
@@ -177,7 +178,7 @@ class LVSet(): # numpydoc ignore=SA01
             # stop after too many iterations to avoid infinite loops
             iteration += 1
             if iteration > max_iteration:
-                echo.warning(f"Reached maximum iteration ({max_iteration}) while searching for experiment set. Stopping search.")
+                warnings.warn(f"Reached maximum iteration ({max_iteration}) while searching for experiment set. Stopping search.")
                 break
         return None
     
@@ -207,13 +208,13 @@ class LVSet(): # numpydoc ignore=SA01
         """
         experiment = self.get_experiment()
         if experiment is None:
-            echo.warning(f"No experiment set found for {self.file}. Cannot retrieve calibration.")
+            warnings.warn(f"No experiment set found for {self.file}. Cannot retrieve calibration.")
             return None
 
         # get calibration file
         calibration_file = experiment.file.with_suffix("") / "Properties" / "Calibration" / "Calibration.xml"
         if not calibration_file.exists():
-            echo.warning(f"Calibration file {calibration_file} does not exist. Cannot retrieve calibration.")
+            warnings.warn(f"Calibration file {calibration_file} does not exist. Cannot retrieve calibration.")
             return None
         
         return calibration.get_calibration(calibration_file)
@@ -343,10 +344,9 @@ class LVSet(): # numpydoc ignore=SA01
 
 if __name__ == "__main__":
     from pprint import pprint
-    from pylogs import echo
     # Example usage
     set_file = Path("example/example.set")
-    echo.path(set_file)
+    print(set_file)
     with LVSet(set_file) as set:
         pprint(set.get_properties())
         print(f"Number of frames in the set: {len(set)}")
@@ -354,7 +354,7 @@ if __name__ == "__main__":
     print()
 
     outside_set = Path("/media/scadet03/CADET_MAIN/Manips/2025-10/data.2025-10.piv/DaVis/Upstream/jonc_2/f=0.7, S0=0.05, d=0.06, N=5.0/1/1.set")
-    echo.path(outside_set)
+    print(outside_set)
     with LVSet(outside_set) as set:
         pprint(set.get_properties())
         print(f"Number of frames in the set: {len(set)}")
@@ -365,7 +365,7 @@ if __name__ == "__main__":
     print()
 
     outside_set = Path("/media/scadet03/CADET_MAIN/Manips/2025-10/data.2025-10.piv/temporary_calibration_ref_data/jonc_1/f=0.8, S0=0.05, d=0.06, N=1.0/Scale.set")
-    echo.path(outside_set)
+    print(outside_set)
     with LVSet(outside_set) as set:
         pprint(set.get_properties())
         print(f"Number of frames in the set: {len(set)}")
@@ -377,7 +377,7 @@ if __name__ == "__main__":
     print()
 
     outside_set = Path("/media/scadet03/CADET_MAIN/Manips/2025-10/data.2025-10.piv/DaVis/Upstream/jonc_1/f=0.7, S0=0.05, d=0.06, N=1.0/1/1.set")
-    echo.path(outside_set)
+    print(outside_set)
     with LVSet(outside_set) as set:
         print(set)
         print(f"Number of frames in the set: {len(set)}")
@@ -387,11 +387,11 @@ if __name__ == "__main__":
         print(frame)
 
         parent = set.get_parent()
-        echo.path(parent.file if parent is not None else "No parent set found.")
+        print(parent.file if parent is not None else "No parent set found.")
 
         experiment = set.get_experiment()
         print(experiment)
-        echo.path(experiment.file if experiment is not None else "No experiment set found.")
+        print(experiment.file if experiment is not None else "No experiment set found.")
 
         calib = set.get_calibration()
         print(calib)

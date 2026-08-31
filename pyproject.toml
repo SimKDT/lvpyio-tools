@@ -11,10 +11,8 @@ authors = [
 dependencies = [
     "numpy",
     "matplotlib",
-    "tqdm",
     "Pillow",
     "lvpyio>=1.4.0",
-    "pylogs @ git+https://github.com/SimKDT/pylogs.git",
 ]
 
 [project.urls]

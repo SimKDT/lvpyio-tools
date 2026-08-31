@@ -1,7 +1,8 @@
 # python
+__pycache__/
 *.egg-info
-build
-__pycache__
+build/
+dist/
 
 # sphinx
 docs/_build

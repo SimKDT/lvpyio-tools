@@ -1,8 +1,6 @@
 from enum import Enum, StrEnum
 from datetime import datetime
-import locale
-
-from pylogs import echo
+import locale, warnings
 
 def _read_date(value: str) -> datetime | None:
     """
@@ -33,7 +31,7 @@ def _read_date(value: str) -> datetime | None:
                 # restoration fails, just proceed
                 pass
     except ValueError:
-        echo.error(f"Could not parse date from value '{value}'")
+        warnings.warn(f"Could not parse date from value '{value}'")
         return None
 
 
@@ -69,14 +67,14 @@ def _read_set_type(value: str) -> SetType | None:
     try:
         value_int = int(value)
     except ValueError:
-        echo.error(f"Could not convert value '{value}' to int for SetType")
+        warnings.warn(f"Could not convert value '{value}' to int for SetType")
         return None
     
     # try to convert to SetType
     try:
         return SetType(value_int)
     except ValueError:
-        echo.error(f"Unknown SetType value '{value_int}'")
+        warnings.warn(f"Unknown SetType value '{value_int}'")
         return None
 
 class SetProperty(StrEnum):

@@ -16,11 +16,7 @@ help:
 	@echo "lvpyioTools"
 	@echo "Usage: make [target]"
 	@echo "Available targets:"
-	@echo "    doc: Generate doc"
 	@echo "    serve: Serve documentation on http://localhost:8000"
-
-doc:
-	.venv/bin/python ./doc/generate.py
 
 # Sphinx documentation targets
 serve: html

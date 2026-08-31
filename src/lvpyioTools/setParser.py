@@ -1,7 +1,6 @@
 from pathlib import Path
 from typing import Any
-
-from pylogs import echo
+import warnings
 
 from .setProperties import SetProperty, property_types
 
@@ -23,18 +22,18 @@ def read_property(key: str, value: str):
     try:
         prop = SetProperty(key)
     except ValueError:
-        echo.warning(f"Unknown property '{key}' found in the set file.")
+        warnings.warn(f"Unknown property '{key}' found in the set file.")
         return None, None
 
     # convert to type
     prop_type = property_types.get(prop, None)
     if prop_type is None:
-        echo.warning(f"Unknown property '{key}' found in the set file.")
+        warnings.warn(f"Unknown property '{key}' found in the set file.")
     else:
         try:
             value = prop_type(value)  # convert to the appropriate type
         except Exception as e:
-            echo.error(f"Error converting property '{key}' with value '{value}': {e}")
+            warnings.warn(f"Error converting property '{key}' with value '{value}': {e}")
             return None, None
 
     return prop, value
@@ -91,15 +90,15 @@ if __name__ == "__main__":
     examples = Path("example")
     
     for set_file in examples.rglob("*.set"):
-        echo.path(set_file)
+        print(set_file)
         set_dict = read(set_file)
         pprint(set_dict)
 
         if SetProperty.SetTime in set_dict:
-            echo.info(f"SetTime: {set_dict[SetProperty.SetTime].isoformat()}")
+            print(f"SetTime: {set_dict[SetProperty.SetTime].isoformat()}")
 
 
     outside_set = Path("/media/scadet03/CADET_MAIN/Manips/2025-10/data.2025-10.piv/temporary_calibration_ref_data/jonc_1/f=0.8, S0=0.05, d=0.06, N=1.0/Scale.set")
-    echo.path(outside_set)
+    print(outside_set)
     set_dict = read(outside_set)
     pprint(set_dict)
