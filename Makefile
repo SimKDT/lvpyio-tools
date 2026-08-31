@@ -1,4 +1,4 @@
-.PHONY: help doc serve
+.PHONY: help doc serve release
 SHELL := /bin/bash
 
 # Sphinx documentation variables
@@ -17,6 +17,7 @@ help:
 	@echo "Usage: make [target]"
 	@echo "Available targets:"
 	@echo "    serve: Serve documentation on http://localhost:8000"
+	@echo "    release: Build and upload the package to PyPi"
 
 # Sphinx documentation targets
 serve: html
