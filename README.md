@@ -3,6 +3,7 @@
 [![License](https://img.shields.io/github/license/SimKDT/lvpyio-tools?label=License)](LICENSE)
 ![Code Size](https://img.shields.io/github/languages/code-size/SimKDT/lvpyio-tools?label=Code%20Size)
 [![PyPi Version](https://img.shields.io/pypi/v/lvpyioTools)](https://pypi.org/project/lvpyioTools/)
+[![Documentation](https://img.shields.io/badge/docs-blue?style=for-the-badge&label=sphinx&logo=sphinx&logoColor=white)](https://simkdt.github.io/lvpyio-tools/)
 
 A collection of helper tools to manipulate lvpyio objects such as Sets by using the [lvpyio](https://pypi.org/project/lvpyio/) library.
 
