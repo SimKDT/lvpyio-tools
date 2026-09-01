@@ -40,7 +40,7 @@ jobs:
       - name: Build documentation
         run: |
           cd docs
-          make clean html
+          make html
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
