@@ -23,5 +23,12 @@ classifiers = [
 Homepage = "https://github.com/SimKDT/lvpyio-tools"
 Issues = "https://github.com/SimKDT/lvpyio-tools/issues"
 
+[project.optional-dependencies]
+docs = [
+    "sphinx>=7.0",
+    "pydata-sphinx-theme>=0.14.0",
+    "sphinx-autodoc-typehints>=1.23.0",
+]
+
 [project.scripts]
 lvpyioShow = "lvpyioTools.viewer:main"
