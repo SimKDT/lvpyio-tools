@@ -34,6 +34,8 @@ pip install .
 
 ## Usage
 
+You can find the API documentation in [https://simkdt.github.io/lvpyio-tools/](https://simkdt.github.io/lvpyio-tools/).
+
 ```python
 from pathlib import Path
 from lvpyioTools.set import LVSet
@@ -44,8 +46,6 @@ with LVSet(set_file) as lv_set:
     print(f"Number of frames: {len(lv_set)}")
     print(f"Properties: {lv_set.properties}")
 ```
-
-You can find a more in-depth documentation in the folder `docs`.
 
 ## Doc (build)
 ```bash
