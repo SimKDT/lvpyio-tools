@@ -12,6 +12,23 @@ A collection of tools to manipulate lvpyio objects such as Sets.
 Installation
 ------------
 
+From PyPi
+~~~~~~~~~
+
+.. code-block:: bash
+
+   pip install lvpyioTools
+
+From Git
+~~~~~~~~
+
+.. code-block:: bash
+
+   pip install git+https://github.com/SimKDT/lvpyio-tools.git
+
+From Local
+~~~~~~~~~~
+
 .. code-block:: bash
 
    pip install .
