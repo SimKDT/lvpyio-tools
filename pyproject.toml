@@ -3,7 +3,7 @@ name = "lvpyioTools"
 description = "A set of tools to handle LabView files and data via the lvpyio library."
 readme = { file = "README.md", content-type = "text/markdown" }
 requires-python = ">=3.12.3"
-version = "2.4.7"
+version = "2.4.8"
 license = "MIT"
 license-files = ["LICENSE"]
 authors = [
@@ -22,6 +22,7 @@ classifiers = [
 [project.urls]
 Homepage = "https://github.com/SimKDT/lvpyio-tools"
 Issues = "https://github.com/SimKDT/lvpyio-tools/issues"
+Documentation = "https://simkdt.github.io/lvpyio-tools"
 
 [project.optional-dependencies]
 docs = [
