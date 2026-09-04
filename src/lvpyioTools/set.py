@@ -259,7 +259,7 @@ class LVSet(): # numpydoc ignore=SA01
 
     def __iter__(self):
         for buffer_frame in range(len(self)):
-            yield self.get_buffer(buffer_frame)
+            yield self.get_image(buffer_frame)
 
     def get_buffer(self, buffer_frame: int) -> Buffer:
         """
