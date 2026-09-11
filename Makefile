@@ -28,7 +28,7 @@ serve: html
 	@$(SPHINXBUILD) -M $@ $(ALLSPHINXOPTS) $(BUILDDIR)
 
 # PyPi release chain
-release: clean setup build upload
+release: clean setup build_package upload
 
 setup:
 	python3 -m venv .venv
@@ -38,7 +38,7 @@ setup:
 clean:
 	rm -rf dist
 
-build:
+build_package:
 	.venv/bin/python3 -m build
 
 upload:
