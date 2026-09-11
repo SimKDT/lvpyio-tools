@@ -25,9 +25,11 @@ if __name__ == "__main__":
     sys.path.append(str(Path(__file__).parent.parent))
     from lvpyioTools import setParser, calibration
     from lvpyioTools.frame import LVFrame
+    from lvpyioTools.mask import create_mask
 else:
     from . import setParser, calibration
     from .frame import LVFrame
+    from .mask import create_mask
 
 
 
@@ -148,6 +150,32 @@ class LVSet(): # numpydoc ignore=SA01
         """
         return self.file.suffix == ".exp"
 
+    def get_folder(self, init=True) -> Path:
+        """
+        Retrieve the folder of the set file, that is the file without the suffix ".set" or ".exp".
+
+        Args:
+            init (bool, optional): If True, the folder will be created if it does not exist. Defaults to True.
+
+        Raises:
+            FileNotFoundError: If the folder does not exist and `init` is False.
+            NotADirectoryError: If the path exists but is not a directory.
+
+        Returns:
+            Path: The folder path corresponding to the set file.
+        """
+        folder = self.file.with_suffix('')
+        if not folder.exists():
+            if init:
+                folder.mkdir(parents=True, exist_ok=True)
+            else:
+                raise FileNotFoundError(f"Folder '{folder}' does not exist.")
+        if not folder.is_dir():
+            raise NotADirectoryError(f"'{folder}' exists but is not a directory.")
+        
+        return folder
+
+
     def get_parent(self) -> 'LVSet | None':
         """
         Retrieve parent set holding this current set if exists. If the current set is an experiment set, it has no parent and this method will return None.
@@ -212,6 +240,33 @@ class LVSet(): # numpydoc ignore=SA01
                     if child_set_file.exists():
                         children.append(LVSet(child_set_file))
         return children
+
+    def get_mask(self, init: bool = False) -> 'LVSet | None':
+        """
+        Retrieve the mask set associated with the current set.
+
+        If the mask set does not exist and `init` is True, a new mask set will be created.
+
+        Args:
+            init (bool, optional): Whether to create the mask set if it does not exist. Defaults to False.
+
+        Returns:
+            LVSet | None: The mask set if it exists or is created, otherwise None.
+        """
+        folder = self.get_folder()
+        mask_set = folder / "MASK.set"
+        if mask_set.exists():
+            return LVSet(mask_set)
+        if init:
+            return self.make_mask()
+        return None
+
+    def make_mask(self) -> 'LVSet':
+        folder = self.get_folder()
+        mask_set = folder / "MASK.set"
+        if not mask_set.exists():
+            create_mask(mask_set)
+        return LVSet(mask_set)
 
     def get_calibration(self) -> 'Scales | None':
         """

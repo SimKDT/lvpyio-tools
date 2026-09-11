@@ -19,7 +19,7 @@ SetLoadCallback = "";
 
 
 
-def make_mask(set_file: Path | str):
+def create_mask(set_file: Path | str):
     set_file = Path(set_file)
     assert set_file.suffix == ".set", "The set file must have a .set extension"
 
@@ -34,4 +34,4 @@ def make_mask(set_file: Path | str):
 
 if __name__ == "__main__":
     set_file_path = Path("test.set")
-    make_mask(set_file_path)
+    create_mask(set_file_path)
