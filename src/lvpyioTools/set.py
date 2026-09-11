@@ -12,10 +12,22 @@ import lvpyio as lv
 from lvpyio.types.frame import ImageFrame
 from lvpyio.types.buffer import Buffer
 from lvpyio.types.scale import Scales
-from lvpyio.io.set import Set
+from typing import TYPE_CHECKING
 
-from . import setParser, calibration
-from .frame import LVFrame
+if TYPE_CHECKING:
+    from ._lvpyio_stubs.set import Set
+else:
+    from lvpyio.io.set import Set
+
+
+if __name__ == "__main__":
+    import sys
+    sys.path.append(str(Path(__file__).parent.parent))
+    from lvpyioTools import setParser, calibration
+    from lvpyioTools.frame import LVFrame
+else:
+    from . import setParser, calibration
+    from .frame import LVFrame
 
 
 
@@ -200,7 +212,7 @@ class LVSet(): # numpydoc ignore=SA01
                     if child_set_file.exists():
                         children.append(LVSet(child_set_file))
         return children
-    
+
     def get_calibration(self) -> 'Scales | None':
         """
         Retrieve the calibration settings from the experiment set if it exists.
