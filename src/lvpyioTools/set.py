@@ -247,6 +247,8 @@ class LVSet(): # numpydoc ignore=SA01
 
         If the mask set does not exist and `init` is True, a new mask set will be created.
 
+        A mask is a specifically named set file "MASK.set" inside the set folder. Using some operations you can apply that mask on your current set from within DaVis.
+
         Args:
             init (bool, optional): Whether to create the mask set if it does not exist. Defaults to False.
 
@@ -262,6 +264,12 @@ class LVSet(): # numpydoc ignore=SA01
         return None
 
     def make_mask(self) -> 'LVSet':
+        """
+        Create a new mask set for the current set if it does not already exist.
+
+        Returns:
+            LVSet: The newly created or existing mask set.
+        """
         folder = self.get_folder()
         mask_set = folder / "MASK.set"
         if not mask_set.exists():
