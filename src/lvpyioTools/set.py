@@ -15,7 +15,7 @@ from lvpyio.types.scale import Scales
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from ._lvpyio_stubs.set import Set
+    from .stubs.set import Set
 else:
     from lvpyio.io.set import Set
 
