@@ -140,6 +140,7 @@ class LVSet(): # numpydoc ignore=SA01
             return
         self.set.close()
         self.set = None
+        return self
 
 
 ## PARENTS / CHILDREN
