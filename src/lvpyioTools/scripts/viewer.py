@@ -1,14 +1,22 @@
-"""
+r"""
+LVPyIO Tools Viewer
+-------------------
 Show a specific image from a DaVis set file.
+
+Usage:
+```bash
+lvpyioShow path/to/set/file
+```
 """
 from pathlib import Path
 
-from .set import LVSet
+from ..set import LVSet
 
 def main():
     import argparse
 
-    parser = argparse.ArgumentParser(description="LVPyIO Tools Viewer")
+    doc = __doc__.strip() if __doc__ is not None else "LVPyIO Tools Viewer"
+    parser = argparse.ArgumentParser(description=doc)
     parser.add_argument("set", type=str, help="Path to the DaVis set file")
     parser.add_argument("--buffer", type=int, default=0, help="Buffer frame number to display (default: 0)")
     parser.add_argument("--frame", type=int, default=0, help="Frame number to display (default: 0)")

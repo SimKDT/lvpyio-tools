@@ -4,6 +4,8 @@ Helper class for working lvpyio frames retrieved from a set.
 
 from typing import TYPE_CHECKING
 from enum import StrEnum
+import matplotlib.pyplot as plt
+from matplotlib.colors import Colormap
 
 from lvpyio.types.frame import ImageFrame
 from lvpyio.types.scale import Scales
@@ -63,7 +65,7 @@ class LVFrame():
 
     def show(self, image_number: int = 0, 
              vmin: float | None = None, vmax: float | None = None,
-             cmap: str = 'gray',
+             cmap: str | Colormap | None = 'gray',
              _show: bool = True):
         """
         Display the image data from a specific frame and image number using the default image viewer.
@@ -71,7 +73,6 @@ class LVFrame():
         Args:
             image_number (int, optional): The index of the image to display. Defaults to 0.
         """
-        import matplotlib.pyplot as plt
         image_data = self.get(image_number)
         fig, ax = plt.subplots()
         ax.imshow(image_data, cmap=cmap, vmin=vmin, vmax=vmax)
