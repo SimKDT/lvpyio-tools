@@ -7,7 +7,7 @@ version = "2.6.3"
 license = "MIT"
 license-files = ["LICENSE"]
 authors = [
-  { name = "SimKDT", email = "simon.cadet79+github@proton.me" },
+    { name = "SimKDT", email = "simon.cadet79+github@proton.me" },
 ]
 dependencies = [
     "numpy",
@@ -16,7 +16,17 @@ dependencies = [
     "lvpyio>=1.4.0",
 ]
 classifiers = [
-  "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.12",
+
+    "Topic :: Scientific/Engineering",
+    "Topic :: Scientific/Engineering :: Image Processing",
+    "Topic :: Scientific/Engineering :: Visualization",
+
+    "Topic :: Multimedia",
+    "Topic :: Multimedia :: Graphics :: Presentation",
+    "Topic :: Multimedia :: Graphics :: Viewers",
+    "Topic :: Multimedia :: Video",
+    "Topic :: Multimedia :: Video :: Display",
 ]
 
 [project.urls]
