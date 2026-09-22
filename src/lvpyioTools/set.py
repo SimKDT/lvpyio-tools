@@ -32,6 +32,45 @@ else:
     from .mask import create_mask
 
 
+def sanitize_set_path(path: Path | str) -> Path:
+    """
+    Sanitize the provided set path.
+
+    This function ensures that the provided path points to a valid .set or .exp file.
+    If a directory is provided, it attempts to find a .set or .exp file within that directory.
+
+    Args:
+        path (Path | str): The path to the .set or .exp file, or a set directory.
+
+    Raises:
+        FileNotFoundError: If the provided path does not exist or no .set or .exp file is found in the directory.
+        ValueError: If the provided file is not a .set or .exp file.
+        FileNotFoundError: If no .set or .exp file is found in the provided directory.
+
+    Returns:
+        Path: The sanitized path to the .set or .exp file.
+    """
+    path = Path(path)
+    if not path.exists():
+        raise FileNotFoundError(f"File {path} does not exist.")
+
+    # if it's a set file already then we simply return it
+    if path.is_file():
+        if not path.suffix in [".set", ".exp"]:
+            raise ValueError(f"Provided set file {path} is not a .set or .exp file.")
+
+    # if it's a directory then we try to find a .set or .exp file
+    # associated to itself
+    else:
+        set_path = path.parent / (path.stem + ".set")
+        exp_path = path.parent / (path.stem + ".exp")
+        if set_path.exists():
+            path = set_path
+        elif exp_path.exists():
+            path = exp_path
+        else:
+            raise FileNotFoundError(f"No .set or .exp file found in directory {path}.")
+    return path
 
 
 class LVSet(): # numpydoc ignore=SA01
@@ -64,29 +103,26 @@ class LVSet(): # numpydoc ignore=SA01
             print(f"Number of frames in the set: {len(set)}")
     ```
     """
-    set: Set | None = None
-    frames: tuple[LVFrame, ...] | None = None
+    def __init__(self, set_path: Path | str):
+        # sanitize file
+        set_path = sanitize_set_path(set_path)
 
-    def __init__(self, file: Path | str):
-        file = Path(file)
+        self.set_file: Path = set_path
+        """Path of the set_file."""
+        self.file: Path = set_path
+        self.properties: dict[setParser.SetProperty, Any] = self.get_properties()
 
-        # verify provided file
-        if not file.exists():
-            raise FileNotFoundError(f"File {file} does not exist.")
-        if not file.is_file():
-            raise ValueError(f"Provided path {file} is not a file.")
-        if not file.suffix in [".set", ".exp"]:
-            raise ValueError(f"Provided file {file} is not a .set or .exp file.")
-
-        self.file = file
-        self.properties = self.get_properties()
+        self.set: Set | None = None
+        """Holds the active set instance. If None, needs to be first opened with `open()`."""
+        self.frames: tuple[LVFrame, ...] | None = None
+        """Holds the frames of the currently opened set. If None, the set is not open."""
 
     def __repr__(self):
         if self.is_experiment():
-            return f"<LVSet: {self.file.name}, experiment set, properties={len(self.properties)}>"
+            return f"<LVSet: {self.set_file.name}, experiment set, properties={len(self.properties)}>"
         if self.is_open():
-            return f"<LVSet: {self.file.name}, {len(self)} frames, properties={len(self.properties)}>"
-        return f"<LVSet: {self.file.name}, closed, properties={len(self.properties)}>"
+            return f"<LVSet: {self.set_file.name}, {len(self)} frames, properties={len(self.properties)}>"
+        return f"<LVSet: {self.set_file.name}, closed, properties={len(self.properties)}>"
 
 
 ## LOADER / SAVER
@@ -130,7 +166,7 @@ class LVSet(): # numpydoc ignore=SA01
         self.close()
         if self.is_experiment():
             raise ValueError(f"Cannot open an experiment set (`.exp`) directly.")
-        self.set = lv.read_set(self.file)
+        self.set = lv.read_set(self.set_file)
 
     def close(self):
         """
@@ -149,7 +185,7 @@ class LVSet(): # numpydoc ignore=SA01
         """
         Check if the set is an experiment set (`.exp`).
         """
-        return self.file.suffix == ".exp"
+        return self.set_file.suffix == ".exp"
 
     def get_folder(self, init=True) -> Path:
         """
@@ -165,7 +201,7 @@ class LVSet(): # numpydoc ignore=SA01
         Returns:
             Path: The folder path corresponding to the set file.
         """
-        folder = self.file.with_suffix('')
+        folder = self.set_file.with_suffix('')
         if not folder.exists():
             if init:
                 folder.mkdir(parents=True, exist_ok=True)
@@ -189,7 +225,7 @@ class LVSet(): # numpydoc ignore=SA01
             return None
 
         # get parent theorical path
-        set_dir = self.file.parent
+        set_dir = self.set_file.parent
         parent_dir = set_dir.parent
 
         # find .set or .exp file if exists
@@ -233,7 +269,7 @@ class LVSet(): # numpydoc ignore=SA01
             list[LVSet]: A list of child sets.
         """
         children = []
-        set_dir = self.file.parent
+        set_dir = self.set_file.parent
         for child_dir in set_dir.iterdir():
             if child_dir.is_dir():
                 for suffix in [".set", ".exp"]:
@@ -286,11 +322,11 @@ class LVSet(): # numpydoc ignore=SA01
         """
         experiment = self.get_experiment()
         if experiment is None:
-            warnings.warn(f"No experiment set found for {self.file}. Cannot retrieve calibration.")
+            warnings.warn(f"No experiment set found for {self.set_file}. Cannot retrieve calibration.")
             return None
 
         # get calibration file
-        calibration_file = experiment.file.with_suffix("") / "Properties" / "Calibration" / "Calibration.xml"
+        calibration_file = experiment.set_file.with_suffix("") / "Properties" / "Calibration" / "Calibration.xml"
         if not calibration_file.exists():
             warnings.warn(f"Calibration file {calibration_file} does not exist. Cannot retrieve calibration.")
             return None
@@ -318,7 +354,7 @@ class LVSet(): # numpydoc ignore=SA01
         """
         Read the set file and display its content.
         """
-        with open(self.file, 'r') as f:
+        with open(self.set_file, 'r') as f:
             return f.read().strip()
 
     def get_properties(self) -> dict[setParser.SetProperty, Any]:
@@ -328,7 +364,7 @@ class LVSet(): # numpydoc ignore=SA01
         Returns:
             dict[SetProperty, Any]: A dictionary containing the set properties and their values.
         """
-        return setParser.read(self.file)
+        return setParser.read(self.set_file)
 
 
 ## READERS
@@ -469,11 +505,11 @@ if __name__ == "__main__":
         print(frame)
 
         parent = set.get_parent()
-        print(parent.file if parent is not None else "No parent set found.")
+        print(parent.set_file if parent is not None else "No parent set found.")
 
         experiment = set.get_experiment()
         print(experiment)
-        print(experiment.file if experiment is not None else "No experiment set found.")
+        print(experiment.set_file if experiment is not None else "No experiment set found.")
 
         calib = set.get_calibration()
         print(calib)
