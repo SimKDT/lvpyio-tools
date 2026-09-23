@@ -117,12 +117,22 @@ class LVSet(): # numpydoc ignore=SA01
         self.frames: tuple[LVFrame, ...] | None = None
         """Holds the frames of the currently opened set. If None, the set is not open."""
 
+    def get_name(self) -> str:
+        """
+        Get the name of the set file without its extension.
+
+        Returns:
+            str: The stem of the set file.
+        """
+        return self.set_file.stem
+
     def __repr__(self):
+        name = self.get_name()
         if self.is_experiment():
-            return f"<LVSet: {self.set_file.name}, experiment set, properties={len(self.properties)}>"
+            return f"<LVSet: {name}, experiment set, properties={len(self.properties)}>"
         if self.is_open():
-            return f"<LVSet: {self.set_file.name}, {len(self)} frames, properties={len(self.properties)}>"
-        return f"<LVSet: {self.set_file.name}, closed, properties={len(self.properties)}>"
+            return f"<LVSet: {name}, {len(self)} frames, properties={len(self.properties)}>"
+        return f"<LVSet: {name}, closed, properties={len(self.properties)}>"
 
 
 ## LOADER / SAVER
