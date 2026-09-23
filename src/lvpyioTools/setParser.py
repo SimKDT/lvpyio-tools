@@ -1,9 +1,9 @@
 r"""
 Provide utilities to parse and read properties from set files.
 """
+import warnings
 from pathlib import Path
 from typing import Any
-import warnings
 
 if __name__ == "__main__":
     import sys
@@ -66,7 +66,7 @@ def read(file: Path) -> dict[SetProperty, Any]:
     # identify line with "#GROUP Sets"
     group_line_index = None
     for i, line in enumerate(lines):
-        if line.strip() == "#GROUP Sets":
+        if line.strip().startswith("#GROUP"):
             group_line_index = i
             break
     
