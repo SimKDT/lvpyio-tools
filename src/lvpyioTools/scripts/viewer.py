@@ -20,7 +20,7 @@ def main():
         description=doc,
         formatter_class=argparse.RawDescriptionHelpFormatter
     )
-    parser.add_argument("set", type=str, help="Path to the DaVis set file")
+    parser.add_argument("set", type=Path, help="Path to the DaVis set file")
     parser.add_argument("--buffer", type=int, default=0, help="Buffer frame number to display (default: 0)")
     parser.add_argument("--frame", type=int, default=0, help="Frame number to display (default: 0)")
     parser.add_argument("--image", type=int, default=0, help="Image number to display (default: 0)")
@@ -29,7 +29,7 @@ def main():
     parser.add_argument("--cmap", type=str, default='gray', help="Colormap for image display (default: 'gray')")
     args = parser.parse_args()
 
-    with LVSet(Path(args.set)) as lv_set:
+    with LVSet(args.set) as lv_set:
         try:
             frame = lv_set.get_frame(args.buffer, args.frame)
             frame.show(image_number=args.image, 
