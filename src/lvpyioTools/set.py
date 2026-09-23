@@ -23,11 +23,11 @@ else:
 if __name__ == "__main__":
     import sys
     sys.path.append(str(Path(__file__).parent.parent))
-    from lvpyioTools import setParser, calibration
+    from lvpyioTools import setParser, calibration, SET_SUFFIXES
     from lvpyioTools.frame import LVFrame
     from lvpyioTools.mask import create_mask
 else:
-    from . import setParser, calibration
+    from . import setParser, calibration, SET_SUFFIXES
     from .frame import LVFrame
     from .mask import create_mask
 
@@ -56,7 +56,7 @@ def sanitize_set_path(path: Path | str) -> Path:
 
     # if it's a set file already then we simply return it
     if path.is_file():
-        if not path.suffix in [".set", ".exp"]:
+        if not path.suffix in SET_SUFFIXES:
             raise ValueError(f"Provided set file {path} is not a .set or .exp file.")
 
     # if it's a directory then we try to find a .set or .exp file
@@ -239,7 +239,7 @@ class LVSet(): # numpydoc ignore=SA01
         parent_dir = set_dir.parent
 
         # find .set or .exp file if exists
-        for suffix in [".set", ".exp"]:
+        for suffix in SET_SUFFIXES:
             # try to access the set file
             parent_set_file = parent_dir / (set_dir.name + suffix)
             if parent_set_file.exists():
@@ -282,7 +282,7 @@ class LVSet(): # numpydoc ignore=SA01
         set_dir = self.set_file.parent
         for child_dir in set_dir.iterdir():
             if child_dir.is_dir():
-                for suffix in [".set", ".exp"]:
+                for suffix in SET_SUFFIXES:
                     child_set_file = child_dir / (child_dir.name + suffix)
                     if child_set_file.exists():
                         children.append(LVSet(child_set_file))
