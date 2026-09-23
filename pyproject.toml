@@ -36,7 +36,7 @@ Documentation = "https://simkdt.github.io/lvpyio-tools"
 
 [project.optional-dependencies]
 docs = [
-    "sphinx>=7.0",
+    "sphinx>=9.1.0",
     "pydata-sphinx-theme>=0.14.0",
     "sphinx-autodoc-typehints>=1.23.0",
 ]
