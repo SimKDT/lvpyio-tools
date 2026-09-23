@@ -94,13 +94,13 @@ class LVSet(): # numpydoc ignore=SA01
     --------
 
     ```python
-        from lvpyioTools.sets import LVSet
         from pathlib import Path
+        from lvpyioTools.set import LVSet
 
         set_file = Path("example/example.set")
-        with LVSet(set_file) as set:
-            set.show()
-            print(f"Number of frames in the set: {len(set)}")
+        with LVSet(set_file) as lvset:
+            lvset.show()
+            print(f"Number of frames in the set: {len(lvset)}")
     ```
     """
     def __init__(self, set_path: Path | str):
