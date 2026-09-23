@@ -7,6 +7,7 @@ A collection of tools to manipulate lvpyio objects such as Sets.
    :maxdepth: 2
    :caption: Contents:
 
+   api/scripts
    api
 
 Installation

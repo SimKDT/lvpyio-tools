@@ -1,5 +1,5 @@
-setParser Module
-================
+setParser
+=========
 
 .. automodule:: lvpyioTools.setParser
    :members:

@@ -1,5 +1,5 @@
-calibration Module
-==================
+calibration
+===========
 
 .. automodule:: lvpyioTools.calibration
    :members:

@@ -1,7 +1,7 @@
-set
-===
+utils
+=====
 
-.. automodule:: lvpyioTools.set
+.. automodule:: lvpyioTools.utils
    :members:
    :undoc-members:
    :show-inheritance:

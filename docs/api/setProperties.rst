@@ -1,5 +1,5 @@
-setProperties Module
-====================
+setProperties
+=============
 
 .. automodule:: lvpyioTools.setProperties
    :members:

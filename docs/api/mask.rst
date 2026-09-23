@@ -1,7 +1,7 @@
-set
-===
+mask
+====
 
-.. automodule:: lvpyioTools.set
+.. automodule:: lvpyioTools.mask
    :members:
    :undoc-members:
    :show-inheritance:

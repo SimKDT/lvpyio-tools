@@ -1,5 +1,5 @@
-frame Module
-============
+frame
+=====
 
 .. automodule:: lvpyioTools.frame
    :members:

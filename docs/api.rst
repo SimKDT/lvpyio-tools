@@ -15,7 +15,8 @@ Modules
    api/attribute
    api/calibration
    api/frame
+   api/mask
    api/set
    api/setParser
    api/setProperties
-   api/viewer
+   api/utils
