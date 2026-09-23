@@ -103,6 +103,8 @@ class LVSet(): # numpydoc ignore=SA01
             print(f"Number of frames in the set: {len(lvset)}")
     ```
     """
+    _set_cache: dict[Path, 'LVSet'] = {}
+
     def __init__(self, set_path: Path | str):
         # sanitize file
         set_path = sanitize_set_path(set_path)
@@ -116,6 +118,8 @@ class LVSet(): # numpydoc ignore=SA01
         """Holds the active set instance. If None, needs to be first opened with `open()`."""
         self.frames: tuple[LVFrame, ...] | None = None
         """Holds the frames of the currently opened set. If None, the set is not open."""
+
+        LVSet._set_cache[self.set_file] = self
 
     def get_name(self) -> str:
         """
