@@ -172,7 +172,7 @@ class LVSet(): # numpydoc ignore=SA01
         """
         Load the set with lvpyio.
         """
-        # safeguard to ensure we properly close the set
+        # safeguard to ensure we properly close the set before reopening it
         self.close()
         if self.is_experiment():
             raise ValueError(f"Cannot open an experiment set (`.exp`) directly.")
@@ -279,13 +279,13 @@ class LVSet(): # numpydoc ignore=SA01
             list[LVSet]: A list of child sets.
         """
         children = []
-        set_dir = self.set_file.parent
+        set_dir = self.get_folder()
         for child_dir in set_dir.iterdir():
-            if child_dir.is_dir():
-                for suffix in SET_SUFFIXES:
-                    child_set_file = child_dir / (child_dir.name + suffix)
-                    if child_set_file.exists():
-                        children.append(LVSet(child_set_file))
+            if not child_dir.is_file(): continue
+            for suffix in SET_SUFFIXES:
+                child_set_file = child_dir.with_suffix(suffix)
+                if not child_set_file.exists(): continue
+                children.append(LVSet(child_set_file))
         return children
 
     def get_mask(self, init: bool = False) -> 'LVSet | None':
