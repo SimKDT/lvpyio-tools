@@ -1,9 +1,18 @@
+r"""
+Provide utilities to parse and read properties from set files.
+"""
 from pathlib import Path
 from typing import Any
 import warnings
 
-from .setProperties import SetProperty, property_types
-
+if __name__ == "__main__":
+    import sys
+    sys.path.append(str(Path(__file__).parent.parent))
+    from lvpyioTools.setProperties import SetProperty, property_types
+    from lvpyioTools.utils import is_set_file
+else:
+    from .setProperties import SetProperty, property_types
+    from .utils import is_set_file
 
 _PROPERTY_PATTERN = r"(?P<property>\w+) = \"?(?P<value>[\S\s]*?)\"?;"
 
@@ -40,7 +49,7 @@ def read_property(key: str, value: str):
 
 def read(file: Path) -> dict[SetProperty, Any]:
     """
-    Read the contents of a file.
+    Read the contents of a set file and extract its properties.
 
     Args:
         file (Path): The path to the file to read.
@@ -48,6 +57,8 @@ def read(file: Path) -> dict[SetProperty, Any]:
     Returns:
         dict[SetProperty, Any]: A dictionary containing the set properties and their values.
     """
+    if not is_set_file(file):
+        raise ValueError(f"The file '{file}' is not a valid .set file.")
     with open(file, 'r') as f:
         content = f.read().strip()
     lines = content.splitlines()
