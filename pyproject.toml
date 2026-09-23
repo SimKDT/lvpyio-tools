@@ -10,9 +10,9 @@ authors = [
     { name = "SimKDT", email = "simon.cadet79+github@proton.me" },
 ]
 dependencies = [
-    "numpy",
-    "matplotlib",
-    "Pillow",
+    "numpy>=2.5.1",
+    "matplotlib>=3.11.1",
+    "Pillow>=12.3.0",
     "lvpyio>=1.4.0",
 ]
 classifiers = [
