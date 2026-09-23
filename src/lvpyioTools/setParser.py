@@ -26,7 +26,7 @@ def read_property(key: str, value: str):
         value (str): The property value from the set file.
 
     Returns:
-        tuple[SetProperty | None, Any]: A tuple containing the property key as a `SetProperty` enum member (or `None` if unknown) and the converted property value (or `None` if conversion failed).
+        tuple[SetProperty | None, Any]: A tuple containing the property key as a ``SetProperty`` enum member (or ``None`` if unknown) and the converted property value (or ``None`` if conversion failed).
     """
     try:
         prop = SetProperty(key)

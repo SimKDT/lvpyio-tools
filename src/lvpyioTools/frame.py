@@ -85,19 +85,19 @@ class LVFrame():
     def scale(self) -> Scales:
         """
         Read the scale information from the frame, that is a class containing the following attributes:
-        - `x`: The scale in the x-direction (in meters per pixel).
-        - `y`: The scale in the y-direction (in meters per pixel).
-        - `z`: The scale in the z-direction (in meters per pixel).
-        - `i`: The scale in the intensity direction (generally with a slope of 1).
+        - ``x``: The scale in the x-direction (in meters per pixel).
+        - ``y``: The scale in the y-direction (in meters per pixel).
+        - ``z``: The scale in the z-direction (in meters per pixel).
+        - ``i``: The scale in the intensity direction (generally with a slope of 1).
 
-        Each attributes are `Scale` objects, which contain the following attributes:
-        - `slope`: The slope of the scale
-        - `offset`: The offset of the scale
-        - `unit`: The unit of the scale (mm, counts, etc.)
-        - `description`: Mostly just empty
+        Each attributes are ``Scale`` objects, which contain the following attributes:
+        - ``slope``: The slope of the scale
+        - ``offset``: The offset of the scale
+        - ``unit``: The unit of the scale (mm, counts, etc.)
+        - ``description``: Mostly just empty
 
         Returns:
-            Scales: A `Scales` object containing the scale information for the frame.
+            Scales: A ``Scales`` object containing the scale information for the frame.
         """
         return self.frame.scales
 
@@ -109,7 +109,7 @@ class LVFrame():
             attribute (FrameAttribute): The attribute to retrieve.
         
         Returns:
-            Any: The value of the requested attribute, or `None` if the attribute is not found in the frame.
+            Any: The value of the requested attribute, or ``None`` if the attribute is not found in the frame.
         """
         return self.frame.attributes.get(attribute.value, None)
     

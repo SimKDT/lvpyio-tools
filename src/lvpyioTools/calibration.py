@@ -27,7 +27,7 @@ def get_calibration(calibration_file: Path) -> Scales:
         calibration_file (Path): Calibration file in XML format.
 
     Returns:
-        Scales: A `Scales` object containing the calibration settings for x, y, z, and i axes.
+        Scales: A ``Scales`` object containing the calibration settings for x, y, z, and i axes.
     """
     # Read and parse the XML file
     tree = ET.parse(calibration_file)

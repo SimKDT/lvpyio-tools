@@ -82,6 +82,7 @@ class LVSet(): # numpydoc ignore=SA01
     This provides a simple interface to easily manipulate and read the set files.
 
     A set of images is handled this way in DaVis:
+
     1. buffer (set[buffer_frame])
     2. frame (set[buffer_frame][frame_number])
     3. image (set[buffer_frame][frame_number].images[image_number])
@@ -93,7 +94,8 @@ class LVSet(): # numpydoc ignore=SA01
     Examples
     --------
 
-    ```python
+    .. code-block:: python
+
         from pathlib import Path
         from lvpyioTools.set import LVSet
 
@@ -101,7 +103,6 @@ class LVSet(): # numpydoc ignore=SA01
         with LVSet(set_file) as lvset:
             lvset.show()
             print(f"Number of frames in the set: {len(lvset)}")
-    ```
     """
     _set_cache: dict[Path, 'LVSet'] = {}
 
@@ -115,7 +116,7 @@ class LVSet(): # numpydoc ignore=SA01
         self.properties: dict[setParser.SetProperty, Any] = self.get_properties()
 
         self.set: Set | None = None
-        """Holds the active set instance. If None, needs to be first opened with `open()`."""
+        """Holds the active set instance. If None, needs to be first opened with ``open()``."""
         self.frames: tuple[LVFrame, ...] | None = None
         """Holds the frames of the currently opened set. If None, the set is not open."""
 
@@ -197,7 +198,7 @@ class LVSet(): # numpydoc ignore=SA01
 
     def is_experiment(self) -> bool:
         """
-        Check if the set is an experiment set (`.exp`).
+        Check if the set is an experiment set (``.exp``).
         """
         return self.set_file.suffix == ".exp"
 
@@ -209,7 +210,7 @@ class LVSet(): # numpydoc ignore=SA01
             init (bool, optional): If True, the folder will be created if it does not exist. Defaults to True.
 
         Raises:
-            FileNotFoundError: If the folder does not exist and `init` is False.
+            FileNotFoundError: If the folder does not exist and ``init`` is False.
             NotADirectoryError: If the path exists but is not a directory.
 
         Returns:
@@ -295,7 +296,7 @@ class LVSet(): # numpydoc ignore=SA01
         """
         Retrieve the mask set associated with the current set.
 
-        If the mask set does not exist and `init` is True, a new mask set will be created.
+        If the mask set does not exist and ``init`` is True, a new mask set will be created.
 
         A mask is a specifically named set file "MASK.set" inside the set folder. Using some operations you can apply that mask on your current set from within DaVis.
 

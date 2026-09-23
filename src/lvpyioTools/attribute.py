@@ -85,7 +85,7 @@ class BufferAttribute(StrEnum):
     DEV_DATA_TRACE4 = "DevDataTrace4"
     EX_PATH_VALUE_F = "ExPathValue_f"
     LOAD_FILE = "LoadFile"
-    """Source file of the buffer attributes and data. For `.im7` files this is the original `.im7` file for example."""
+    """Source file of the buffer attributes and data. For ``.im7`` files this is the original ``.im7`` file for example."""
     LOAD_SET = "LoadSet"
     """Original set file from which this buffer was loaded. The extension (.set) is omitted."""
     LOAD_SET_INDEX = "LoadSetIndex"

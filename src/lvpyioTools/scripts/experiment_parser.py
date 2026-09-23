@@ -4,9 +4,10 @@ Experiment set parser
 Shows a children tree hierarchy of the provided set.
 
 Usage:
-```bash
-lvpyioTree path/to/set/file
-```
+
+.. code-block:: bash
+
+    lvpyioTree path/to/set/file
 """
 from pathlib import Path
 from rich import prompt, tree

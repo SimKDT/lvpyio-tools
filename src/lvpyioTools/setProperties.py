@@ -15,7 +15,7 @@ def _read_date(value: str) -> datetime | None:
         value (str): The date string from the .set file.
 
     Returns:
-        datetime | None: The corresponding datetime object, or `None` if parsing failed.
+        datetime | None: The corresponding datetime object, or ``None`` if parsing failed.
     """
     try:
         # use 'C' locale to ensure parsing works regardless of system locale
@@ -38,16 +38,16 @@ def _read_date(value: str) -> datetime | None:
 
 class SetType(Enum):
     """
-    Classifications of the different values of the `SetType` property.
+    Classifications of the different values of the ``SetType`` property.
     """
     IMAGE = 256
-    """`.im7` images"""
+    """``.im7`` images"""
     VECTORS = 512
-    """`.vc7` files"""
+    """``.vc7`` files"""
     CINE = 4352
-    """`.cine` file"""
+    """``.cine`` file"""
     PROPERTIES = 8192
-    """`Properties` folder"""
+    """``Properties`` folder"""
     FOLDER = 16384
     """Simple folder"""
     CALIBRATION = 131072
@@ -55,13 +55,13 @@ class SetType(Enum):
 
 def _read_set_type(value: str) -> SetType | None:
     """
-    Convert a string value to a `SetType` enum member.
+    Convert a string value to a ``SetType`` enum member.
 
     Args:
         value (str): The string representation of the set type, which is expected to be an integer in string format.
 
     Returns:
-        SetType: The corresponding `SetType` enum member.
+        SetType: The corresponding ``SetType`` enum member.
     """
     # convert to int
     try:

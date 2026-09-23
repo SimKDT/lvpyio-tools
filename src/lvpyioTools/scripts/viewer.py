@@ -4,9 +4,10 @@ LVPyIO Tools Viewer
 Show a specific image from a DaVis set file.
 
 Usage:
-```bash
-lvpyioShow path/to/set/file
-```
+
+.. code-block:: bash
+
+    lvpyioShow path/to/set/file
 """
 from pathlib import Path
 
