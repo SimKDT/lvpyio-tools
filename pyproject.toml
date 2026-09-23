@@ -14,6 +14,7 @@ dependencies = [
     "matplotlib>=3.11.1",
     "Pillow>=12.3.0",
     "lvpyio>=1.4.0",
+    "rich>=15.0.0",
 ]
 classifiers = [
     "Programming Language :: Python :: 3.12",
@@ -43,3 +44,4 @@ docs = [
 
 [project.scripts]
 lvpyioShow = "lvpyioTools.scripts.viewer:main"
+lvpyioTree = "lvpyioTools.scripts.experiment_parser:main"
