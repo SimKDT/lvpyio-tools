@@ -23,11 +23,11 @@ else:
 if __name__ == "__main__":
     import sys
     sys.path.append(str(Path(__file__).parent.parent))
-    from lvpyioTools import setParser, calibration, SET_SUFFIXES
+    from lvpyioTools import setParser, calibration, SetSuffix, SET_SUFFIXES
     from lvpyioTools.frame import LVFrame
     from lvpyioTools.mask import create_mask
 else:
-    from . import setParser, calibration, SET_SUFFIXES
+    from . import setParser, calibration, SetSuffix, SET_SUFFIXES
     from .frame import LVFrame
     from .mask import create_mask
 
@@ -282,10 +282,9 @@ class LVSet(): # numpydoc ignore=SA01
         set_dir = self.get_folder()
         for child_dir in set_dir.iterdir():
             if not child_dir.is_file(): continue
-            for suffix in SET_SUFFIXES:
-                child_set_file = child_dir.with_suffix(suffix)
-                if not child_set_file.exists(): continue
-                children.append(LVSet(child_set_file))
+            child_set_file = child_dir.with_suffix(SetSuffix.SET)
+            if not child_set_file.exists(): continue
+            children.append(LVSet(child_set_file))
         return children
 
     def get_mask(self, init: bool = False) -> 'LVSet | None':
