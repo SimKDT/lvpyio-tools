@@ -36,7 +36,7 @@ pip install .
 
 ## Usage
 
-You can find the API documentation in [https://simkdt.github.io/lvpyio-tools/](https://simkdt.github.io/lvpyio-tools/).
+You can find the full documentation in [https://simkdt.github.io/lvpyio-tools/](https://simkdt.github.io/lvpyio-tools/).
 
 ```python
 from pathlib import Path
